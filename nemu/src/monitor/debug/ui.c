@@ -87,7 +87,8 @@ static int cmd_p(char *args)
 }
 static int cmd_x(char *args)
 {
-  printf("%s\n", args);
+  char * result = strtok(args, " ");
+  printf("%s\n", result);
   return 0;
 }
 static int cmd_w(char *args)
