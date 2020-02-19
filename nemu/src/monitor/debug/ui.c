@@ -87,8 +87,17 @@ static int cmd_p(char *args)
 }
 static int cmd_x(char *args)
 {
-  char * result = strtok(args, " ");
-  printf("%s\n", result);
+  int n;
+  char buf[128];
+  sscanf(args, "%d %s", &n, buf);
+  bool success;
+  uint32_t addr = expr(buf, &success);
+  if (!success)
+    return -1;
+  // 这里要把物理地址转虚拟地址
+
+  for (int i = 0; i < n; i++)
+    printf("0x%08x ", paddr_read(addr, 4));
   return 0;
 }
 static int cmd_w(char *args)
