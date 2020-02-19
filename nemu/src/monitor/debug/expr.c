@@ -225,7 +225,7 @@ uint32_t expr(char *e, bool *success)
       }
     }
   }
-  printf("%d\n", values_top);
+  printf("values_top : %d ops_top %d\n", values_top, ops_top);
   if (values_top == 1)
   {
     int tmp = 0;
