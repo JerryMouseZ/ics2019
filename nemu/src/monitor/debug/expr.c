@@ -133,6 +133,7 @@ static bool make_token(char *e)
 
 int eval(Token token)
 {
+  int num = 0;
   switch (token.type)
   {
   case TK_REG:
@@ -148,7 +149,15 @@ int eval(Token token)
   case TK_DEC:
     return atoi(token.str);
   case TK_HEX:
-    return atoi(token.str);
+    for (char *begin = token.str + 2; begin < token.str + strlen(token.str); begin++)
+    {
+      num *= 16;
+      if (*begin >= 'a' && *begin <= 'f')
+        num += *begin - 'a' + 10;
+      else if (*begin >= '0' && *begin <= '9')
+        num += *begin - '0';
+    }
+    return num;
   case TK_EQ:
     return '=';
   case '+':
