@@ -191,6 +191,7 @@ uint32_t expr(char *e, bool *success)
   values[values_top] = eval(tokens[0]);
   for (int i = 1; i < nr_token; i++)
   {
+    printf("%s\n", tokens[i].str);
     if (priority[i] < priority[i - 1])
     {
       // 后面的优先级更大， 移进
