@@ -2,6 +2,7 @@
 #include "monitor/expr.h"
 #include "monitor/watchpoint.h"
 #include "nemu.h"
+// #include "x86/include/isa/reg.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -45,17 +46,50 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args)
 {
-  if(args == NULL)
+  if (args == NULL)
   {
     cpu_exec(1);
   }
-  else{
+  else
+  {
     int i = atoi(args);
     cpu_exec(i);
   }
   return 0;
 }
 
+static int cmd_info(char *args)
+{
+  if (args[0] == 'w')
+  {
+    ;
+  }
+  else if (args[0] == 'r')
+  {
+    for (int i = R_EAX; i < R_EDI; i++)
+    {
+      printf("%s 0x%08x\n", reg_name(i, 4), cpu.gpr[i]._32);
+    }
+  }
+  return 0;
+}
+
+static int cmd_p(char *args)
+{
+  return 0;
+}
+static int cmd_x(char *args)
+{
+  return 0;
+}
+static int cmd_w(char *args)
+{
+  return 0;
+}
+static int cmd_d(char *args)
+{
+  return 0;
+}
 static struct
 {
   char *name;
@@ -66,6 +100,11 @@ static struct
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "excute n step or null input excute 1 step", cmd_si},
+    {"info", "print the state of register or the watch point", cmd_info},
+    {"p", "calculate the value of the expr", cmd_p},
+    {"x", "scan the memory and print the value at the physical addr", cmd_x},
+    {"w", "add a watch point at the expr", cmd_w},
+    {"d", "delete the Nth watch point ", cmd_d},
     /* TODO: Add more commands */
 
 };
