@@ -74,9 +74,11 @@ typedef struct Value
 } Value;
 
 static Token tokens[32] __attribute__((used)) = {};
-static int priority[32] = {0};
-static Value values[32] = {0};
+static int priority = 0;
+static int values[32] = {0};
+static int ops[32] = {0};
 static int values_top = -1;
+static int ops_top = -1;
 static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
@@ -108,29 +110,10 @@ static bool make_token(char *e)
         {
         case TK_NOTYPE:
           break;
-        case TK_HEX:
-        case TK_DEC:
-          tokens[nr_token].type = rules[i].token_type;
-          strncpy(tokens[nr_token].str, substr_start, substr_len);
-          priority[nr_token] = 0;
-          nr_token++;
-          break;
-        case '+':
-        case '-':
-          tokens[nr_token].type = rules[i].token_type;
-          strncpy(tokens[nr_token].str, substr_start, substr_len);
-          priority[nr_token] = 1;
-          nr_token++;
-          break;
-        case '*':
-        case '/':
-          tokens[nr_token].type = rules[i].token_type;
-          strncpy(tokens[nr_token].str, substr_start, substr_len);
-          priority[nr_token] = 2;
-          nr_token++;
-          break;
         default:
-          break;
+          tokens[nr_token].type = rules[i].token_type;
+          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          nr_token++;
           //TODO();
         }
         break;
@@ -147,37 +130,50 @@ static bool make_token(char *e)
   return true;
 }
 
-Value eval(Token token)
+int eval(Token token)
 {
-  Value value;
   switch (token.type)
   {
   case TK_DEC:
-    value.value = atoi(token.str);
+    return atoi(token.str);
     break;
   case TK_HEX:
-    value.value = atoi(token.str);
+    return atoi(token.str);
     break;
   case TK_EQ:
-    value.value = '=';
+    return '=';
     break;
   case '+':
-    value.value = '+';
+    return '+';
     break;
   case '-':
-    value.value = '-';
+    return '-';
     break;
   case '*':
-    value.value = '*';
+    return '*';
     break;
   case '/':
-    value.value = '/';
+    return '/';
     break;
   default:
     break;
   }
-  printf("token : %s value : %d\n",token.str, value.value);
-  return value;
+  return 0;
+}
+
+int get_priority(int op)
+{
+  switch (op)
+  {
+  case '+':
+  case '-':
+    return 1;
+  case '*':
+  case '/':
+    return 2;
+    break;
+  }
+  return 0;
 }
 
 uint32_t expr(char *e, bool *success)
@@ -187,47 +183,69 @@ uint32_t expr(char *e, bool *success)
     *success = false;
     return 0;
   }
-  printf("token has been made\n");
-  values_top = 0;
-  values[values_top] = eval(tokens[0]);
-  for (int i = 1; i < nr_token; i++)
+  values_top = -1;
+  ops_top = -1;
+  priority = 0;
+  for (int i = 0; i < nr_token; i++)
   {
     printf("%s\n", tokens[i].str);
-    if (priority[i] < priority[i - 1])
+    if (i % 2 == 0)
     {
-      // 后面的优先级更大， 移进
       values[++values_top] = eval(tokens[i]);
-      printf("%d\n", values[values_top].value);
     }
     else
     {
-      //从栈中弹出三个元素，压入一个元素
-      Value tmp;
-      switch (values[values_top - 1].value)
+      int tmp_pri = get_priority(eval(tokens[i]));
+      if (tmp_pri > priority)
       {
-      case '+':
-        tmp.value = values[values_top - 2].value + values[values_top].value;
-        tmp.type = true;
-        break;
-      case '-':
-        tmp.value = values[values_top - 2].value - values[values_top].value;
-        tmp.type = true;
-        break;
-      case '*':
-        tmp.value = values[values_top - 2].value * values[values_top].value;
-        tmp.type = true;
-        break;
-      case '/':
-        tmp.value = values[values_top - 2].value / values[values_top].value;
-        tmp.type = true;
-        break;
+        ops[++ops_top] = eval(tokens[i]);
+        priority = tmp_pri;
       }
-      values_top -= 2;
-      values[values_top] = tmp;
-      printf("%d\n", values[values_top].value);
+      else
+      {
+        int tmp = 0;
+        switch (ops[ops_top])
+        {
+        case '+':
+          tmp = values[values_top] + values[values_top - 1];
+          break;
+        case '-':
+          tmp = values[values_top] - values[values_top - 1];
+          break;
+        case '*':
+          tmp = values[values_top] * values[values_top - 1];
+          break;
+        case '/':
+          tmp = values[values_top] / values[values_top - 1];
+          break;
+        }
+        values[--values_top] = tmp;
+        ops[ops_top] = eval(tokens[i]);
+        priority = tmp_pri;
+      }
     }
+  }
+  if (values_top == 1)
+  {
+    int tmp = 0;
+    switch (ops[ops_top])
+    {
+    case '+':
+      tmp = values[values_top] + values[values_top - 1];
+      break;
+    case '-':
+      tmp = values[values_top] - values[values_top - 1];
+      break;
+    case '*':
+      tmp = values[values_top] * values[values_top - 1];
+      break;
+    case '/':
+      tmp = values[values_top] / values[values_top - 1];
+      break;
+    }
+    return tmp;
   }
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-  return values[0].value;
+  return values[0];
 }
