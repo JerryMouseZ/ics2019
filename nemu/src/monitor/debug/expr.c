@@ -61,7 +61,6 @@ void init_regex()
   }
 }
 
-
 typedef struct token
 {
   int type;
@@ -113,7 +112,6 @@ static bool make_token(char *e)
         case TK_DEC:
           tokens[nr_token].type = rules[i].token_type;
           strncpy(tokens[nr_token].str, substr_start, substr_len);
-          printf("%s\n", tokens[nr_token].str);
           priority[nr_token] = 0;
           nr_token++;
           break;
@@ -121,7 +119,6 @@ static bool make_token(char *e)
         case '-':
           tokens[nr_token].type = rules[i].token_type;
           strncpy(tokens[nr_token].str, substr_start, substr_len);
-          printf("%s\n", tokens[nr_token].str);
           priority[nr_token] = 1;
           nr_token++;
           break;
@@ -129,7 +126,6 @@ static bool make_token(char *e)
         case '/':
           tokens[nr_token].type = rules[i].token_type;
           strncpy(tokens[nr_token].str, substr_start, substr_len);
-          printf("%s\n", tokens[nr_token].str);
           priority[nr_token] = 2;
           nr_token++;
           break;
@@ -199,6 +195,7 @@ uint32_t expr(char *e, bool *success)
     {
       // 后面的优先级更大， 移进
       values[++values_top] = eval(tokens[i]);
+      printf("%d\n", values[values_top].value);
     }
     else
     {
@@ -225,6 +222,7 @@ uint32_t expr(char *e, bool *success)
       }
       values_top -= 2;
       values[values_top] = tmp;
+      printf("%d\n", values[values_top].value);
     }
   }
   /* TODO: Insert codes to evaluate the expression. */
