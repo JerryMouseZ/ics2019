@@ -192,6 +192,7 @@ uint32_t expr(char *e, bool *success)
     *success = false;
     return 0;
   }
+  assert(0);
   values_top = 0;
   values[values_top] = eval(tokens[0]);
   for (int i = 1; i < nr_token; i++)
