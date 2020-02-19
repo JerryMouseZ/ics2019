@@ -244,6 +244,7 @@ uint32_t expr(char *e, bool *success)
       tmp = values[values_top] / values[values_top - 1];
       break;
     }
+    printf("value : %d\n",tmp);
     return tmp;
   }
   /* TODO: Insert codes to evaluate the expression. */
