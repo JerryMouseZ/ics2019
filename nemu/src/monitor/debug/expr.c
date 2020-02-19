@@ -98,8 +98,6 @@ static bool make_token(char *e)
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
 
         /* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -192,7 +190,7 @@ uint32_t expr(char *e, bool *success)
     *success = false;
     return 0;
   }
-  assert(0);
+  printf("token has been made\n");
   values_top = 0;
   values[values_top] = eval(tokens[0]);
   for (int i = 1; i < nr_token; i++)
