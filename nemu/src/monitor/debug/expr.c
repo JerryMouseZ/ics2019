@@ -11,8 +11,8 @@ enum
   TK_NOTYPE = 256,
   TK_EQ,
   TK_DEC,
-  TK_HEX
-
+  TK_HEX,
+  TK_REG
   /* TODO: Add more token types */
 
 };
@@ -27,14 +27,15 @@ static struct rule
    * Pay attention to the precedence level of different rules.
    */
 
-    {" +", TK_NOTYPE},       // spaces
-    {"[1-9][0-0]*", TK_DEC}, //dec
-    {"0x[0-9]+", TK_HEX},    //hex
-    {"\\+", '+'},            // plus
-    {"\\-", '-'},            // sub
-    {"\\*", '*'},            //mul
-    {"\\/", '/'},            // div
-    {"==", TK_EQ}            // equal
+    {" +", TK_NOTYPE},                  // spaces
+    {"[1-9][0-0]*", TK_DEC},            //dec
+    {"0x[0-9]+", TK_HEX},               //hex
+    {"\\+", '+'},                       // plus
+    {"\\-", '-'},                       // sub
+    {"\\*", '*'},                       //mul
+    {"\\/", '/'},                       // div
+    {"==", TK_EQ},                      // equal
+    {"\\$[eE][a-zA-Z][a-zA-Z]", TK_REG} //REG
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
@@ -134,27 +135,30 @@ int eval(Token token)
 {
   switch (token.type)
   {
+  case TK_REG:
+    for (int j = R_EAX; j <= R_EDI; j++)
+    {
+      if (!strcmp(token.str + 1, reg_name(j, 0)))
+      {
+        return reg_l(j);
+      }
+    }
+    if (strcmp(token.str + 1, "eip"))
+      return cpu.pc;
   case TK_DEC:
     return atoi(token.str);
-    break;
   case TK_HEX:
     return atoi(token.str);
-    break;
   case TK_EQ:
     return '=';
-    break;
   case '+':
     return '+';
-    break;
   case '-':
     return '-';
-    break;
   case '*':
     return '*';
-    break;
   case '/':
     return '/';
-    break;
   default:
     break;
   }
@@ -244,7 +248,6 @@ uint32_t expr(char *e, bool *success)
       tmp = values[values_top] / values[values_top - 1];
       break;
     }
-    printf("value : %d\n",tmp);
     return tmp;
   }
   /* TODO: Insert codes to evaluate the expression. */
