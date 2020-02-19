@@ -138,7 +138,7 @@ int eval(Token token)
   case TK_REG:
     for (int j = R_EAX; j <= R_EDI; j++)
     {
-      if (!strcmp(token.str + 1, reg_name(j, 0)))
+      if (!strcmp(token.str + 1, reg_name(j, 4)))
       {
         return reg_l(j);
       }
