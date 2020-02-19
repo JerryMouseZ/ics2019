@@ -176,7 +176,7 @@ Value eval(Token token)
   default:
     break;
   }
-  printf("token : %s value : %d",token.str, value.value);
+  printf("token : %s value : %d\n",token.str, value.value);
   return value;
 }
 
