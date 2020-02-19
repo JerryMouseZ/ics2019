@@ -192,7 +192,6 @@ uint32_t expr(char *e, bool *success)
   priority = 0;
   for (int i = 0; i < nr_token; i++)
   {
-    printf("%s\n", tokens[i].str);
     if (i % 2 == 0)
     {
       values[++values_top] = eval(tokens[i]);
