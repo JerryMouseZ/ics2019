@@ -80,13 +80,14 @@ static int cmd_p(char *args)
   uint32_t result = expr(args, &success);
   if (success)
   {
-    printf("the result is %u\n",result);
+    printf("the result is %u\n", result);
     return 0;
   }
   return -1;
 }
 static int cmd_x(char *args)
 {
+  printf("%s\n", args);
   return 0;
 }
 static int cmd_w(char *args)
