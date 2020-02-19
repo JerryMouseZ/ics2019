@@ -76,8 +76,14 @@ static int cmd_info(char *args)
 
 static int cmd_p(char *args)
 {
-  
-  return 0;
+  bool success;
+  uint32_t result = expr(args, &success);
+  if (success)
+  {
+    printf("the result is %u\n",result);
+    return 0;
+  }
+  return -1;
 }
 static int cmd_x(char *args)
 {
