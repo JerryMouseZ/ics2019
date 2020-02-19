@@ -1,5 +1,5 @@
 #include "nemu.h"
-
+#include "stdlib.h"
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -61,13 +61,23 @@ void init_regex()
   }
 }
 
+
 typedef struct token
 {
   int type;
   char str[32];
 } Token;
 
+typedef struct Value
+{
+  bool type;
+  int value;
+} Value;
+
 static Token tokens[32] __attribute__((used)) = {};
+static int priority[32] = {0};
+static Value values[32] = {0};
+static int values_top = -1;
 static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
@@ -101,14 +111,34 @@ static bool make_token(char *e)
         {
         case TK_NOTYPE:
           break;
-        default:
+        case TK_HEX:
+        case TK_DEC:
           tokens[nr_token].type = rules[i].token_type;
           strncpy(tokens[nr_token].str, substr_start, substr_len);
           printf("%s\n", tokens[nr_token].str);
+          priority[nr_token] = 0;
           nr_token++;
+          break;
+        case '+':
+        case '-':
+          tokens[nr_token].type = rules[i].token_type;
+          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          printf("%s\n", tokens[nr_token].str);
+          priority[nr_token] = 1;
+          nr_token++;
+          break;
+        case '*':
+        case '/':
+          tokens[nr_token].type = rules[i].token_type;
+          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          printf("%s\n", tokens[nr_token].str);
+          priority[nr_token] = 2;
+          nr_token++;
+          break;
+        default:
+          break;
           //TODO();
         }
-
         break;
       }
     }
@@ -123,6 +153,38 @@ static bool make_token(char *e)
   return true;
 }
 
+Value eval(Token token)
+{
+  Value value;
+  switch (token.type)
+  {
+  case TK_DEC:
+    value.value = atoi(token.str);
+    break;
+  case TK_HEX:
+    value.value = atoi(token.str);
+    break;
+  case TK_EQ:
+    value.value = '=';
+    break;
+  case '+':
+    value.value = '+';
+    break;
+  case '-':
+    value.value = '-';
+    break;
+  case '*':
+    value.value = '*';
+    break;
+  case '/':
+    value.value = '/';
+    break;
+  default:
+    break;
+  }
+  return value;
+}
+
 uint32_t expr(char *e, bool *success)
 {
   if (!make_token(e))
@@ -130,9 +192,43 @@ uint32_t expr(char *e, bool *success)
     *success = false;
     return 0;
   }
-
+  values_top = 0;
+  values[values_top] = eval(tokens[0]);
+  for (int i = 1; i < nr_token; i++)
+  {
+    if (priority[i] < priority[i - 1])
+    {
+      // 后面的优先级更大， 移进
+      values[++values_top] = eval(tokens[i]);
+    }
+    else
+    {
+      //从栈中弹出三个元素，压入一个元素
+      Value tmp;
+      switch (values[values_top - 1].value)
+      {
+      case '+':
+        tmp.value = values[values_top - 2].value + values[values_top].value;
+        tmp.type = true;
+        break;
+      case '-':
+        tmp.value = values[values_top - 2].value - values[values_top].value;
+        tmp.type = true;
+        break;
+      case '*':
+        tmp.value = values[values_top - 2].value * values[values_top].value;
+        tmp.type = true;
+        break;
+      case '/':
+        tmp.value = values[values_top - 2].value / values[values_top].value;
+        tmp.type = true;
+        break;
+      }
+      values_top -= 2;
+      values[values_top] = tmp;
+    }
+  }
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-
-  return 0;
+  return values[0].value;
 }
