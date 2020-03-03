@@ -257,7 +257,7 @@ uint32_t expr(char *e, bool *success)
     }
   }
   *success = true;
-  for (int i = 0; i < values_top; i++)
+  for (int i = 0; i <= values_top; i++)
   {
     printf("%d\n", values[i]);
   }
