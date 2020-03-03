@@ -284,6 +284,10 @@ uint32_t expr(char *e, bool *success)
     case '/':
       tmp = values[values_top] / values[values_top - 1];
       break;
+    case ')':
+      tmp = values[values_top];
+      values_top++;
+      ops_top--;
     }
     ops_top--;
     values[--values_top] = tmp;
