@@ -237,8 +237,10 @@ uint32_t expr(char *e, bool *success)
       values[++values_top] = eval(tokens[i]);
       break;
     default:
+
       if (get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
+        printf("shift\n");
         ops[++ops_top] = eval(tokens[i]);
         priority = tmp_pri;
         if (priority == 3)
@@ -246,6 +248,7 @@ uint32_t expr(char *e, bool *success)
       }
       else
       {
+        printf("reduce\n");
         int tmp = 0;
         switch (ops[ops_top])
         {
