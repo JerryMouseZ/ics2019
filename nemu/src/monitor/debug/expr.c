@@ -242,6 +242,7 @@ uint32_t expr(char *e, bool *success)
       if (get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         printf("shift\n");
+        printf("%c\n",ops[ops_top]);
         ops[++ops_top] = eval(tokens[i]);
         priority = tmp_pri;
         if (priority == 3)
