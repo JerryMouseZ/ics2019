@@ -219,7 +219,6 @@ uint32_t expr(char *e, bool *success)
     case TK_HEX:
     case TK_REG:
       values[++values_top] = eval(tokens[i]);
-      printf("%d\n", values_top);
       break;
     default:
       tmp_pri = get_priority(eval(tokens[i]));
@@ -258,6 +257,10 @@ uint32_t expr(char *e, bool *success)
     }
   }
   *success = true;
+  for (int i = 0; i < values_top; i++)
+  {
+    printf("%d\n", values[i]);
+  }
   while (values_top > 0)
   {
     int tmp = 0;
