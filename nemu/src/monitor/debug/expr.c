@@ -239,8 +239,10 @@ uint32_t expr(char *e, bool *success)
       values[++values_top] = eval(tokens[i]);
       break;
     default:
+      printf("pre : %d post : %d", get_post_priority(eval(tokens[i])), get_post_priority(ops[ops_top]));
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
+
         printf("shift\n");
         printf("%c\n", ops[ops_top]);
         ops[++ops_top] = eval(tokens[i]);
