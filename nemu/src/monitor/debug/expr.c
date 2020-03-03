@@ -180,7 +180,23 @@ int eval(Token token)
   return 0;
 }
 
-int get_priority(int op)
+int get_post_priority(int op)
+{
+	switch(op)
+	{
+		case '+':
+		case '-':
+			return 1;
+		case '*':
+		case '/':
+			return 2;
+		case '(':
+			return 3;
+		case ')':
+			return 3;
+	}
+}
+int get_pre_priority(int op)
 {
   switch (op)
   {
@@ -191,9 +207,9 @@ int get_priority(int op)
   case '/':
     return 2;
   case '(':
-    return 3;
-  case ')':
     return 0;
+  case ')':
+    return 3;
     break;
   }
   return 0;
@@ -221,8 +237,7 @@ uint32_t expr(char *e, bool *success)
       values[++values_top] = eval(tokens[i]);
       break;
     default:
-      tmp_pri = get_priority(eval(tokens[i]));
-      if (tmp_pri > priority)
+      if (get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         ops[++ops_top] = eval(tokens[i]);
         priority = tmp_pri;
