@@ -27,15 +27,17 @@ static struct rule
    * Pay attention to the precedence level of different rules.
    */
 
-    {" +", TK_NOTYPE},                  // spaces
-    {"[1-9][0-0]*", TK_DEC},            //dec
-    {"0x[0-9]+", TK_HEX},               //hex
-    {"\\+", '+'},                       // plus
-    {"\\-", '-'},                       // sub
-    {"\\*", '*'},                       //mul
-    {"\\/", '/'},                       // div
-    {"==", TK_EQ},                      // equal
-    {"\\$[eE][a-zA-Z][a-zA-Z]", TK_REG} //REG
+    {" +", TK_NOTYPE},                   // spaces
+    {"[1-9][0-0]*", TK_DEC},             //dec
+    {"0x[0-9]+", TK_HEX},                //hex
+    {"\\+", '+'},                        // plus
+    {"\\-", '-'},                        // sub
+    {"\\*", '*'},                        //mul
+    {"\\/", '/'},                        // div
+    {"==", TK_EQ},                       // equal
+    {"\\$[eE][a-zA-Z][a-zA-Z]", TK_REG}, //REG
+    {"\\(", '('},                        // LEF
+    {"\\)", ')'}                         //RIG
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
@@ -168,6 +170,10 @@ int eval(Token token)
     return '*';
   case '/':
     return '/';
+  case '(':
+    return '(';
+  case ')':
+    return ')';
   default:
     break;
   }
@@ -184,6 +190,10 @@ int get_priority(int op)
   case '*':
   case '/':
     return 2;
+  case '(':
+    return 3;
+  case ')':
+    return 0;
     break;
   }
   return 0;
@@ -199,15 +209,21 @@ uint32_t expr(char *e, bool *success)
   values_top = -1;
   ops_top = -1;
   priority = 0;
+  int tmp_pri = 0;
+  printf("%d\n", nr_token);
   for (int i = 0; i < nr_token; i++)
   {
-    if (i % 2 == 0)
+    // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
+    printf("%s\n", tokens[i].str);
+    switch (tokens[i].type)
     {
+    case TK_DEC:
+    case TK_HEX:
+    case TK_REG:
       values[++values_top] = eval(tokens[i]);
-    }
-    else
-    {
-      int tmp_pri = get_priority(eval(tokens[i]));
+      break;
+    default:
+      tmp_pri = get_priority(eval(tokens[i]));
       if (tmp_pri > priority)
       {
         ops[++ops_top] = eval(tokens[i]);
@@ -229,6 +245,11 @@ uint32_t expr(char *e, bool *success)
           break;
         case '/':
           tmp = values[values_top] / values[values_top - 1];
+          break;
+        case ')':
+          tmp = values[values_top];
+          values_top++;
+          ops_top--;
           break;
         }
         values[--values_top] = tmp;
