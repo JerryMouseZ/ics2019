@@ -182,19 +182,20 @@ int eval(Token token)
 
 int get_post_priority(int op)
 {
-	switch(op)
-	{
-		case '+':
-		case '-':
-			return 1;
-		case '*':
-		case '/':
-			return 2;
-		case '(':
-			return 3;
-		case ')':
-			return 3;
-	}
+  switch (op)
+  {
+  case '+':
+  case '-':
+    return 1;
+  case '*':
+  case '/':
+    return 2;
+  case '(':
+    return 3;
+  case ')':
+    return 3;
+  }
+  return 0;
 }
 int get_pre_priority(int op)
 {
@@ -277,6 +278,12 @@ uint32_t expr(char *e, bool *success)
     }
   }
   *success = true;
+  for (int i = 0; i <= ops_top; i++)
+  {
+    printf("%c\n", ops[i]);
+  }
+  for (int i = 0; i <= values_top; i++)
+    printf("%d\n", values[i]);
   while (values_top > 0)
   {
     int tmp = 0;
