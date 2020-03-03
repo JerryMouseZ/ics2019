@@ -258,7 +258,7 @@ uint32_t expr(char *e, bool *success)
     }
   }
   *success = true;
-  if (values_top == 1)
+  while (values_top > 0)
   {
     int tmp = 0;
     switch (ops[ops_top])
@@ -276,7 +276,7 @@ uint32_t expr(char *e, bool *success)
       tmp = values[values_top] / values[values_top - 1];
       break;
     }
-    return tmp;
+    values[--values_top] = tmp;
   }
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
