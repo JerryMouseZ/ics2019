@@ -283,6 +283,7 @@ uint32_t expr(char *e, bool *success)
       tmp = values[values_top] / values[values_top - 1];
       break;
     }
+    ops_top--;
     values[--values_top] = tmp;
   }
   /* TODO: Insert codes to evaluate the expression. */
