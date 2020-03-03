@@ -225,8 +225,6 @@ uint32_t expr(char *e, bool *success)
   }
   values_top = -1;
   ops_top = -1;
-  priority = 0;
-  int tmp_pri = 0;
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
@@ -244,9 +242,7 @@ uint32_t expr(char *e, bool *success)
       {
 
         printf("shift\n");
-        printf("%c\n", ops[ops_top]);
         ops[++ops_top] = eval(tokens[i]);
-        priority = tmp_pri;
         if (priority == 3)
           priority = 0;
       }
@@ -278,7 +274,6 @@ uint32_t expr(char *e, bool *success)
           }
           ops_top--;
           values[--values_top] = tmp;
-          priority = tmp_pri;
         }
         ops[++ops_top] = eval(tokens[i]);
       }
