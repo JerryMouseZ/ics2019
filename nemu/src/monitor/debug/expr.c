@@ -193,7 +193,7 @@ int get_post_priority(int op)
   case '(':
     return 3;
   case ')':
-    return 3;
+    return 0;
   }
   return 0;
 }
