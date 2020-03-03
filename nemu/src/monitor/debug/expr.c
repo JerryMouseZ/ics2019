@@ -210,17 +210,16 @@ uint32_t expr(char *e, bool *success)
   ops_top = -1;
   priority = 0;
   int tmp_pri = 0;
-  printf("%d\n", nr_token);
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
-    printf("%s\n", tokens[i].str);
     switch (tokens[i].type)
     {
     case TK_DEC:
     case TK_HEX:
     case TK_REG:
       values[++values_top] = eval(tokens[i]);
+      printf("%d\n", values_top);
       break;
     default:
       tmp_pri = get_priority(eval(tokens[i]));
