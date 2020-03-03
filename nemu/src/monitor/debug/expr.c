@@ -230,6 +230,7 @@ uint32_t expr(char *e, bool *success)
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
+    printf("%s\n", tokens[i].str);
     switch (tokens[i].type)
     {
     case TK_DEC:
@@ -238,11 +239,10 @@ uint32_t expr(char *e, bool *success)
       values[++values_top] = eval(tokens[i]);
       break;
     default:
-
       if (get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         printf("shift\n");
-        printf("%c\n",ops[ops_top]);
+        printf("%c\n", ops[ops_top]);
         ops[++ops_top] = eval(tokens[i]);
         priority = tmp_pri;
         if (priority == 3)
