@@ -248,10 +248,10 @@ uint32_t expr(char *e, bool *success)
       }
       else
       {
-        printf("reduce\n");
         int tmp = 0;
         while (get_post_priority(eval(tokens[i]) <= get_pre_priority(ops[ops_top])))
         {
+          printf("reduce\n");
           switch (ops[ops_top])
           {
           case '+':
