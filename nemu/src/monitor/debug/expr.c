@@ -254,29 +254,33 @@ uint32_t expr(char *e, bool *success)
       {
         printf("reduce\n");
         int tmp = 0;
-        switch (ops[ops_top])
+        while (get_post_priority(eval(tokens[i]) <= get_pre_priority(ops[ops_top])))
         {
-        case '+':
-          tmp = values[values_top] + values[values_top - 1];
-          break;
-        case '-':
-          tmp = values[values_top] - values[values_top - 1];
-          break;
-        case '*':
-          tmp = values[values_top] * values[values_top - 1];
-          break;
-        case '/':
-          tmp = values[values_top] / values[values_top - 1];
-          break;
-        case ')':
-          tmp = values[values_top];
-          values_top++;
+          switch (ops[ops_top])
+          {
+          case '+':
+            tmp = values[values_top] + values[values_top - 1];
+            break;
+          case '-':
+            tmp = values[values_top] - values[values_top - 1];
+            break;
+          case '*':
+            tmp = values[values_top] * values[values_top - 1];
+            break;
+          case '/':
+            tmp = values[values_top] / values[values_top - 1];
+            break;
+          case ')':
+            tmp = values[values_top];
+            values_top++;
+            ops_top--;
+            break;
+          }
           ops_top--;
-          break;
+          values[--values_top] = tmp;
+          priority = tmp_pri;
         }
-        values[--values_top] = tmp;
-        ops[ops_top] = eval(tokens[i]);
-        priority = tmp_pri;
+        ops[++ops_top] = eval(tokens[i]);
       }
     }
   }
