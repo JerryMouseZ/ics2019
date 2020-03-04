@@ -1,8 +1,6 @@
 *.*
 *
 !*/
-!/src/*
-!/include/*
 !Makefile*
 !*.[cSh]
 !.gitignore
