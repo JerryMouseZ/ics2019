@@ -70,6 +70,14 @@ static int cmd_info(char *args)
     {
       printf("%s 0x%08x\n", reg_name(i, 4), cpu.gpr[i]._32);
     }
+    for (int i = R_AX; i < R_DI; i++)
+    {
+      printf("%s 0x%04x\n", reg_name(i, 2), reg_w(i));
+    }
+    for (int i = R_AL; i < R_BH; i++)
+    {
+      printf("%s 0x%02x\n", reg_name(i, 1), reg_b(i));
+    }
   }
   return 0;
 }
@@ -96,7 +104,8 @@ static int cmd_x(char *args)
     return -1;
   // 这里要把物理地址转虚拟地址
 
-  for (int i = 0; i < n; i++){
+  for (int i = 0; i < n; i++)
+  {
     printf("0x%08x ", addr);
     printf("0x%08x\n", vaddr_read(addr, 4));
     addr += 4;
