@@ -208,7 +208,7 @@ int get_pre_priority(int op)
   case '/':
     return 2;
   case '(':
-    return 0;
+    return -1;
   case ')':
     return 3;
     break;
