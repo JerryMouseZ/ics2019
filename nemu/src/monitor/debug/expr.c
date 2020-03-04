@@ -250,7 +250,7 @@ uint32_t expr(char *e, bool *success)
       {
         int tmp = 0;
         printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
-        while (get_post_priority(eval(tokens[i]) <= get_pre_priority(ops[ops_top])))
+        while (get_post_priority(eval(tokens[i]) > get_pre_priority(ops[ops_top])))
         {
           printf("reduce\n");
           switch (ops[ops_top])
