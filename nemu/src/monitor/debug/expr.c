@@ -228,7 +228,7 @@ uint32_t expr(char *e, bool *success)
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
-    printf("%s\n", tokens[i].str);
+    // printf("%s\n", tokens[i].str);
     switch (tokens[i].type)
     {
     case TK_DEC:
@@ -237,7 +237,7 @@ uint32_t expr(char *e, bool *success)
       values[++values_top] = eval(tokens[i]);
       break;
     default:
-      printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
+      // printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
 
@@ -249,8 +249,8 @@ uint32_t expr(char *e, bool *success)
       else
       {
         int tmp = 0;
-        printf("post : %d, pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
-        assert(get_post_priority(eval(tokens[i])) <= get_pre_priority(ops[ops_top]));
+        // printf("post : %d, pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
+        // assert(get_post_priority(eval(tokens[i])) <= get_pre_priority(ops[ops_top]));
         while (get_post_priority(eval(tokens[i])) <= get_pre_priority(ops[ops_top]) && ops_top > -1)
         {
           printf("reduce\n");
@@ -276,19 +276,19 @@ uint32_t expr(char *e, bool *success)
           }
           ops_top--;
           values[--values_top] = tmp;
-          printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
+          // printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
         }
         ops[++ops_top] = eval(tokens[i]);
       }
     }
   }
   *success = true;
-  for (int i = 0; i <= ops_top; i++)
-  {
-    printf("%c\n", ops[i]);
-  }
-  for (int i = 0; i <= values_top; i++)
-    printf("%d\n", values[i]);
+  // for (int i = 0; i <= ops_top; i++)
+  // {
+  //   printf("%c\n", ops[i]);
+  // }
+  // for (int i = 0; i <= values_top; i++)
+  //   printf("%d\n", values[i]);
   while (values_top > 0)
   {
     int tmp = 0;
