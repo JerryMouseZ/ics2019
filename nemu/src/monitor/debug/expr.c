@@ -249,9 +249,6 @@ uint32_t expr(char *e, bool *success)
       else
       {
         int tmp = 0;
-        printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
-        if(get_post_priority(eval(tokens[i])) <= get_pre_priority(ops[ops_top]))
-        printf("reduce\n");
         while (get_post_priority(eval(tokens[i]) <= get_pre_priority(ops[ops_top])))
         {
           printf("reduce\n");
@@ -277,6 +274,7 @@ uint32_t expr(char *e, bool *success)
           }
           ops_top--;
           values[--values_top] = tmp;
+          printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
         }
         ops[++ops_top] = eval(tokens[i]);
       }
