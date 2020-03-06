@@ -275,7 +275,7 @@ expr(char *e, bool *success)
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         // printf("shift\n");
-        if (i > 0 && strcmp(tokens[i].str, "*") && tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
+        if (i > 0 && strcmp(tokens[i].str, "*") == 0 && tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
         {
           ops[++ops_top] = '%';
           printf("shift %%\n");
