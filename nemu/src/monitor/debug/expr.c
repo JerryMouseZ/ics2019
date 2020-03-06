@@ -271,7 +271,7 @@ expr(char *e, bool *success)
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         // printf("shift\n");
-        // printf("%s\n", tokens[i].str);
+        printf("%s\n", tokens[i].str);
         ops[++ops_top] = eval(tokens[i]);
       }
       else
