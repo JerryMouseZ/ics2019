@@ -31,7 +31,7 @@ static struct rule
 
     {" +", TK_NOTYPE},                   // spaces
     {"[1-9][0-0]*", TK_DEC},             //dec
-    {"0x[0-9a-f]+", TK_HEX},                //hex
+    {"0x[0-9a-f]+", TK_HEX},             //hex
     {"\\+", '+'},                        // plus
     {"\\-", '-'},                        // sub
     {"\\*", '*'},                        //mul
@@ -276,8 +276,6 @@ expr(char *e, bool *success)
       else
       {
         int tmp = 0;
-        // printf("post : %d, pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
-        // assert(get_post_priority(eval(tokens[i])) <= get_pre_priority(ops[ops_top]));
         while (get_post_priority(eval(tokens[i])) <= get_pre_priority(ops[ops_top]) && ops_top > -1)
         {
           // printf("reduce\n");
@@ -290,9 +288,10 @@ expr(char *e, bool *success)
             tmp = values[values_top] - values[values_top - 1];
             break;
           case '*':
-            if (i == 0 || tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
+            if (tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
             {
               // 如果前面是一个是一个符号，那么是一个解引用
+              printf("*\n");
               tmp = vaddr_read(values[values_top], 4);
               values_top++;
             }
@@ -328,12 +327,12 @@ expr(char *e, bool *success)
     }
   }
   *success = true;
-  for (int i = 0; i <= ops_top; i++)
-  {
-    printf("%c\n", ops[i]);
-  }
-  for (int i = 0; i <= values_top; i++)
-    printf("%d\n", values[i]);
+  // for (int i = 0; i <= ops_top; i++)
+  // {
+  //   printf("%c\n", ops[i]);
+  // }
+  // for (int i = 0; i <= values_top; i++)
+  //   printf("%d\n", values[i]);
   // while (values_top > 0)
   // {
   //   int tmp = 0;
