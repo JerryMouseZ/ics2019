@@ -336,12 +336,12 @@ expr(char *e, bool *success)
     }
   }
   *success = true;
-  // for (int i = 0; i <= ops_top; i++)
-  // {
-  //   printf("%c\n", ops[i]);
-  // }
-  // for (int i = 0; i <= values_top; i++)
-  //   printf("%d\n", values[i]);
+  for (int i = 0; i <= ops_top; i++)
+  {
+    printf("%c\n", ops[i]);
+  }
+  for (int i = 0; i <= values_top; i++)
+    printf("%d\n", values[i]);
   // while (values_top > 0)
   // {
   //   int tmp = 0;
