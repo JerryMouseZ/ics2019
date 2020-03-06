@@ -278,6 +278,7 @@ expr(char *e, bool *success)
         if (i > 0 && strcmp(tokens[i].str, "*") && tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
         {
           ops[++ops_top] = '%';
+          printf("shift %%\n");
         }
         else
         {
