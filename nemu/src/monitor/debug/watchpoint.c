@@ -84,10 +84,20 @@ bool check_wp()
     if (result != wp->value)
     {
       flag = true;
-      printf("break point at %s\n", wp->args);
+      printf("break point at %d : %s\n", wp->NO, wp->args);
     }
     wp->value = result;
     wp = wp->next;
   }
   return flag;
+}
+
+void print_wp()
+{
+  WP *wp = head;
+  while (wp != NULL)
+  {
+    printf("%d : %s\n", wp->NO, wp->args);
+    wp = wp->next;
+  }
 }

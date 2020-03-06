@@ -62,7 +62,7 @@ static int cmd_info(char *args)
 {
   if (args[0] == 'w')
   {
-    ;
+     
   }
   else if (args[0] == 'r')
   {
