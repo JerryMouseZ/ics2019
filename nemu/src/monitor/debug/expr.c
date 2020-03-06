@@ -298,6 +298,7 @@ expr(char *e, bool *success)
             }
             else
             {
+              printf("mul\n");
               tmp = values[values_top] * values[values_top - 1];
             }
             break;
