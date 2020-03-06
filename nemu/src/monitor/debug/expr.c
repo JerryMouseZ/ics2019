@@ -289,6 +289,7 @@ expr(char *e, bool *success)
             tmp = values[values_top] - values[values_top - 1];
             break;
           case '*':
+            printf("%d\n", tokens[i - 1].type);
             if (tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
             {
               // 如果前面是一个是一个符号，那么是一个解引用
