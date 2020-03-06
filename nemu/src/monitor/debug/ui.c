@@ -116,15 +116,17 @@ static int cmd_x(char *args)
 }
 static int cmd_w(char *args)
 {
-  WP *wp = new_wp();
-  strcpy(wp->args, args);
   bool success;
-  wp->value = expr(args, &success);
+  int value = expr(args, &success);
   if (!success)
   {
     printf("error expression!\n");
-    wp->isuse = true;
+    return 0;
   }
+  WP *wp = new_wp();
+  strcpy(wp->args, args);
+  wp->isuse = true;
+  wp->value = value;
   return 0;
 }
 static int cmd_d(char *args)

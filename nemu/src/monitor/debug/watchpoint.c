@@ -37,12 +37,15 @@ WP *new_wp()
   return result;
 }
 
-void free_wp(char *args)
+void free_wp(WP *wp)
 {
-  printf("free a node\n");
+  if (!wp->isuse)
+  {
+    printf("error free number\n");
+    return 0;
+  }
   WP *temp = head;
-  WP *wp = NULL;
-  if (strcpy(temp->args, args))
+  if (temp == wp)
   {
     head = head->next;
   }
@@ -51,7 +54,7 @@ void free_wp(char *args)
     while (temp != NULL)
     {
       /* code */
-      if (strcpy(temp->next->args, args))
+      if (temp->next == wp)
       {
         WP *dd = temp->next->next;
         temp->next = dd;
@@ -60,27 +63,26 @@ void free_wp(char *args)
       temp = temp->next;
     }
   }
-  if (!wp)
-  {
-    wp->next = free_;
-    free_ = wp;
-  }
+  wp->isuse = false;
+  wp->next = free_;
+  free_ = wp;
 }
 
 bool check_wp()
 {
+  bool flag = false;
   WP *wp = head;
   while (wp != NULL)
   {
     bool success;
     int result = expr(wp->args, &success);
-    printf("%d\n", result);
-    if (success && result > 0)
+    if (result != wp->value)
     {
-      printf("%d\n", result);
-      return true;
+      flag = true;
+      printf("break point at %s\n", wp->args);
     }
+    wp->value = result;
     wp = wp->next;
   }
-  return false;
+  return flag;
 }
