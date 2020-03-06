@@ -38,6 +38,7 @@ WP *new_wp()
 
 void free_wp(char *args)
 {
+  printf("free a node\n");
   WP *temp = head;
   WP *wp = NULL;
   if (strcpy(temp->args, args))
