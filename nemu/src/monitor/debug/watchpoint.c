@@ -6,9 +6,11 @@
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
 
-void init_wp_pool() {
+void init_wp_pool()
+{
   int i;
-  for (i = 0; i < NR_WP; i ++) {
+  for (i = 0; i < NR_WP; i++)
+  {
     wp_pool[i].NO = i;
     wp_pool[i].next = &wp_pool[i + 1];
   }
@@ -17,7 +19,26 @@ void init_wp_pool() {
   head = NULL;
   free_ = wp_pool;
 }
-
 /* TODO: Implement the functionality of watchpoint */
 
+WP *new_wp()
+{
+  return head;
+}
 
+void free_wp(WP *wp)
+{
+}
+
+bool check_wp()
+{
+  WP *wp = head;
+  while (wp != NULL)
+  {
+    bool success;
+    int result = expr(wp->args, &success);
+    if (success && result > 0)
+      return true;
+  }
+  return false;
+}

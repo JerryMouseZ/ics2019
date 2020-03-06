@@ -10,6 +10,8 @@ enum
 {
   TK_NOTYPE = 256,
   TK_EQ,
+  TK_NE,
+  TK_AND,
   TK_DEC,
   TK_HEX,
   TK_REG
@@ -37,7 +39,9 @@ static struct rule
     {"==", TK_EQ},                       // equal
     {"\\$[eE][a-zA-Z][a-zA-Z]", TK_REG}, //REG
     {"\\(", '('},                        // LEF
-    {"\\)", ')'}                         //RIG
+    {"\\)", ')'},                        //RIG
+    {"&&", TK_AND},                      //AND
+    {"!=", TK_NE}                        // NOT EQUEL
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
@@ -162,6 +166,10 @@ int eval(Token token)
     return num;
   case TK_EQ:
     return '=';
+  case TK_NE:
+    return '!';
+  case TK_AND:
+    return '&';
   case '+':
     return '+';
   case '-':
@@ -184,14 +192,19 @@ int get_post_priority(int op)
 {
   switch (op)
   {
+  case '&':
+    return 1;
+  case '!':
+  case '=':
+    return 2;
   case '+':
   case '-':
-    return 1;
+    return 3;
   case '*':
   case '/':
-    return 2;
+    return 4;
   case '(':
-    return 3;
+    return 5;
   case ')':
     return 0;
   }
@@ -201,22 +214,28 @@ int get_pre_priority(int op)
 {
   switch (op)
   {
+  case '&':
+    return 1;
+  case '!':
+  case '=':
+    return 2;
   case '+':
   case '-':
-    return 1;
+    return 3;
   case '*':
   case '/':
-    return 2;
+    return 4;
   case '(':
     return -1;
   case ')':
-    return 3;
-    break;
+    return 5;
   }
   return 0;
 }
 
-uint32_t expr(char *e, bool *success)
+uint32_t 
+
+expr(char *e, bool *success)
 {
   if (!make_token(e))
   {
@@ -263,6 +282,10 @@ uint32_t expr(char *e, bool *success)
             tmp = values[values_top] - values[values_top - 1];
             break;
           case '*':
+            if(i==0 || tokens[i-1].type != TK_DEC && tokens[i-1].type != TK_HEX && tokens[i-1].type != TK_REG)
+            {
+              // 如果前面是一个是一个符号，那么是一个解引用
+            }
             tmp = values[values_top] * values[values_top - 1];
             break;
           case '/':
@@ -272,6 +295,12 @@ uint32_t expr(char *e, bool *success)
             tmp = values[values_top];
             values_top++;
             ops_top--;
+            break;
+          case '=':
+            break;
+          case '!':
+            break;
+          case '&':
             break;
           }
           ops_top--;
