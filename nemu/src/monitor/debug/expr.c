@@ -199,7 +199,7 @@ int get_post_priority(int op)
   switch (op)
   {
   case '#':
-    return 6;
+    return -1;
   case '&':
     return 1;
   case '!':
@@ -254,12 +254,7 @@ expr(char *e, bool *success)
   }
   values_top = -1;
   ops_top = -1;
-  for (int i = 0; i <= ops_top; i++)
-  {
-    printf("%c\n", ops[i]);
-  }
-  for (int i = 0; i <= values_top; i++)
-    printf("%d\n", values[i]);
+ 
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
@@ -275,11 +270,8 @@ expr(char *e, bool *success)
       // printf("post : %d pre : %d\n", get_post_priority(eval(tokens[i])), get_pre_priority(ops[ops_top]));
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
-
         // printf("shift\n");
         ops[++ops_top] = eval(tokens[i]);
-        if (priority == 3)
-          priority = 0;
       }
       else
       {
