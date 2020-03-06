@@ -278,7 +278,6 @@ expr(char *e, bool *success)
         if (i > 0 && strcmp(tokens[i].str, "*") == 0 && tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
         {
           ops[++ops_top] = '%';
-          printf("shift %%\n");
         }
         else
         {
@@ -300,7 +299,6 @@ expr(char *e, bool *success)
             tmp = values[values_top] - values[values_top - 1];
             break;
           case '%':
-            printf("%\n");
             tmp = vaddr_read(values[values_top], 4);
             values_top++;
             break;
