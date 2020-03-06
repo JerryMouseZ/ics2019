@@ -254,6 +254,12 @@ expr(char *e, bool *success)
   }
   values_top = -1;
   ops_top = -1;
+  for (int i = 0; i <= ops_top; i++)
+  {
+    printf("%c\n", ops[i]);
+  }
+  for (int i = 0; i <= values_top; i++)
+    printf("%d\n", values[i]);
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
