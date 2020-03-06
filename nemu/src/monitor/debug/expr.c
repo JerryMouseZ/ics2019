@@ -212,6 +212,8 @@ int get_post_priority(int op)
   case '/':
     return 4;
   case '(':
+    return 6;
+  case '%':
     return 5;
   case ')':
     return 0;
@@ -233,10 +235,12 @@ int get_pre_priority(int op)
   case '*':
   case '/':
     return 4;
+  case '%':
+    return 5;
   case '(':
     return -1;
   case ')':
-    return 5;
+    return 6;
   case '#':
     return -2;
   }
@@ -271,8 +275,14 @@ expr(char *e, bool *success)
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         // printf("shift\n");
-        printf("%s\n", tokens[i].str);
-        ops[++ops_top] = eval(tokens[i]);
+        if (i > 0 && strcmp(tokens[i].str, "*") && tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
+        {
+          ops[++ops_top] = '%';
+        }
+        else
+        {
+          ops[++ops_top] = eval(tokens[i]);
+        }
       }
       else
       {
@@ -288,20 +298,12 @@ expr(char *e, bool *success)
           case '-':
             tmp = values[values_top] - values[values_top - 1];
             break;
+          case '%':
+            tmp = vaddr_read(values[values_top], 4);
+            values_top++;
+            break;
           case '*':
-            printf("%d\n", tokens[i - 1].type);
-            if (tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
-            {
-              // 如果前面是一个是一个符号，那么是一个解引用
-              printf("*\n");
-              tmp = vaddr_read(values[values_top], 4);
-              values_top++;
-            }
-            else
-            {
-              printf("mul\n");
-              tmp = values[values_top] * values[values_top - 1];
-            }
+            tmp = values[values_top] * values[values_top - 1];
             break;
           case '/':
             tmp = values[values_top] / values[values_top - 1];
