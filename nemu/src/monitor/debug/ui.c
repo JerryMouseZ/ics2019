@@ -118,10 +118,18 @@ static int cmd_w(char *args)
 {
   WP *wp = new_wp();
   strcpy(wp->args, args);
+  bool success;
+  wp->value = expr(args, &success);
+  if (!success)
+  {
+    printf("error expression!\n");
+    wp->isuse = true;
+  }
   return 0;
 }
 static int cmd_d(char *args)
 {
+  int n = atoi(args);
   free_wp(args);
   return 0;
 }

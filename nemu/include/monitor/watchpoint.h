@@ -9,7 +9,8 @@ typedef struct watchpoint
   struct watchpoint *next;
   char args[64];
   /* TODO: Add more members if necessary */
-
+  int value;
+  bool isuse;
 } WP;
 
 bool check_wp();
