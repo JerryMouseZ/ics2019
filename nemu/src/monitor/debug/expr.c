@@ -154,7 +154,7 @@ int eval(Token token)
         return reg_l(j);
       }
     }
-    if (strcmp(token.str + 1, "eip"))
+    if (strcmp(token.str + 1, "eip") || strcmp(token.str + 1, "pc"))
       return cpu.pc;
   case TK_DEC:
     return atoi(token.str);
@@ -254,7 +254,7 @@ expr(char *e, bool *success)
   }
   values_top = -1;
   ops_top = -1;
- 
+
   for (int i = 0; i < nr_token; i++)
   {
     // 括号应该加到符号栈里，这样就可以和前面的运算符隔开了
