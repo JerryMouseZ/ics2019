@@ -132,7 +132,7 @@ static int cmd_w(char *args)
 static int cmd_d(char *args)
 {
   int n = atoi(args);
-  free_wp(args);
+  del_wp(n);
   return 0;
 }
 static struct

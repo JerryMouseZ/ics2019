@@ -67,6 +67,11 @@ void free_wp(WP *wp)
   wp->next = free_;
   free_ = wp;
 }
+void del_wp(int n)
+{
+  if (n >= 0 && n < NR_WP)
+    free_wp(wp_pool + n);
+}
 
 bool check_wp()
 {
