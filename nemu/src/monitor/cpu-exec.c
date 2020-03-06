@@ -72,7 +72,7 @@ void cpu_exec(uint64_t n)
 
     /* TODO: check watchpoints here. */
     if (check_wp())
-      break;
+      nemu_state.state = NEMU_STOP;
 #endif
 
     g_nr_guest_instr++;

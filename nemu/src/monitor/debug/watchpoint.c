@@ -23,11 +23,46 @@ void init_wp_pool()
 
 WP *new_wp()
 {
-  return head;
+  // 把free的头加到 head的前面
+  if (free_ == NULL)
+  {
+    assert(0);
+    return NULL;
+  }
+  WP *result = free_;
+  free_ = free_->next;
+  result->next = head;
+  head = result;
+  return result;
 }
 
-void free_wp(WP *wp)
+void free_wp(char *args)
 {
+  WP *temp = head;
+  WP *wp = NULL;
+  if (strcpy(temp->args, args))
+  {
+    head = head->next;
+  }
+  else
+  {
+    while (temp != NULL)
+    {
+      /* code */
+      if (strcpy(temp->next->args, args))
+      {
+        WP *dd = temp->next->next;
+        temp->next = dd;
+        break;
+      }
+      temp = temp->next;
+    }
+  }
+  if (!wp)
+  {
+    wp->next = free_;
+    free_ = wp;
+  }
 }
 
 bool check_wp()
@@ -39,6 +74,7 @@ bool check_wp()
     int result = expr(wp->args, &success);
     if (success && result > 0)
       return true;
+    wp = wp->next;
   }
   return false;
 }

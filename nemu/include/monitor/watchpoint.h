@@ -13,4 +13,6 @@ typedef struct watchpoint
 } WP;
 
 bool check_wp();
+WP *new_wp();
+void free_wp(char *args);
 #endif
