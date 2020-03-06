@@ -95,7 +95,9 @@ static bool make_token(char *e)
   regmatch_t pmatch;
 
   nr_token = 0;
-
+  tokens[nr_token].type = '#';
+  strncpy(tokens[nr_token].str, "#", 1);
+  nr_token++;
   while (e[position] != '\0')
   {
     /* Try all rules one by one. */
@@ -133,7 +135,9 @@ static bool make_token(char *e)
       return false;
     }
   }
-
+  tokens[nr_token].type = '#';
+  strncpy(tokens[nr_token].str, "#", 1);
+  nr_token++;
   return true;
 }
 
@@ -182,6 +186,8 @@ int eval(Token token)
     return '(';
   case ')':
     return ')';
+  case '#':
+    return '#';
   default:
     break;
   }
@@ -192,6 +198,8 @@ int get_post_priority(int op)
 {
   switch (op)
   {
+  case '#':
+    return 6;
   case '&':
     return 1;
   case '!':
@@ -229,6 +237,8 @@ int get_pre_priority(int op)
     return -1;
   case ')':
     return 5;
+  case '#':
+    return -2;
   }
   return 0;
 }
@@ -347,6 +357,13 @@ expr(char *e, bool *success)
       tmp = values[values_top];
       values_top++;
       ops_top--;
+      break;
+    case '&':
+      break;
+    case '=':
+      break;
+    case '!':
+      break;
     }
     ops_top--;
     values[--values_top] = tmp;
