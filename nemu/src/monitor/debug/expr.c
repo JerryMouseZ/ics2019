@@ -303,7 +303,6 @@ expr(char *e, bool *success)
             values_top++;
             break;
           case '*':
-            printf("*\n");
             tmp = values[values_top] * values[values_top - 1];
             break;
           case '/':
