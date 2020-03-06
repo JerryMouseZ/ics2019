@@ -233,7 +233,7 @@ int get_pre_priority(int op)
   return 0;
 }
 
-uint32_t 
+uint32_t
 
 expr(char *e, bool *success)
 {
@@ -282,11 +282,16 @@ expr(char *e, bool *success)
             tmp = values[values_top] - values[values_top - 1];
             break;
           case '*':
-            if(i==0 || tokens[i-1].type != TK_DEC && tokens[i-1].type != TK_HEX && tokens[i-1].type != TK_REG)
+            if (i == 0 || tokens[i - 1].type != TK_DEC && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG)
             {
               // 如果前面是一个是一个符号，那么是一个解引用
+              tmp = vaddr_read(values[values_top], 4);
+              values_top++;
             }
-            tmp = values[values_top] * values[values_top - 1];
+            else
+            {
+              tmp = values[values_top] * values[values_top - 1];
+            }
             break;
           case '/':
             tmp = values[values_top] / values[values_top - 1];
@@ -297,10 +302,13 @@ expr(char *e, bool *success)
             ops_top--;
             break;
           case '=':
+            tmp = values[values_top] == values[values_top - 1];
             break;
           case '!':
+            tmp = values[values_top] != values[values_top - 1];
             break;
           case '&':
+            tmp = values[values_top] && values[values_top - 1];
             break;
           }
           ops_top--;
