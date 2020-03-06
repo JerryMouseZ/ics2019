@@ -74,7 +74,10 @@ bool check_wp()
     bool success;
     int result = expr(wp->args, &success);
     if (success && result > 0)
+    {
+      printf("%d\n", result);
       return true;
+    }
     wp = wp->next;
   }
   return false;
