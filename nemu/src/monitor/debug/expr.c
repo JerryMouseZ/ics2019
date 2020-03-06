@@ -271,6 +271,7 @@ expr(char *e, bool *success)
       if (ops_top == -1 || get_post_priority(eval(tokens[i])) > get_pre_priority(ops[ops_top]))
       {
         // printf("shift\n");
+        printf("%s\n", tokens[i]);
         ops[++ops_top] = eval(tokens[i]);
       }
       else
@@ -327,44 +328,6 @@ expr(char *e, bool *success)
     }
   }
   *success = true;
-  // for (int i = 0; i <= ops_top; i++)
-  // {
-  //   printf("%c\n", ops[i]);
-  // }
-  // for (int i = 0; i <= values_top; i++)
-  //   printf("%d\n", values[i]);
-  // while (values_top > 0)
-  // {
-  //   int tmp = 0;
-  //   switch (ops[ops_top])
-  //   {
-  //   case '+':
-  //     tmp = values[values_top] + values[values_top - 1];
-  //     break;
-  //   case '-':
-  //     tmp = values[values_top] - values[values_top - 1];
-  //     break;
-  //   case '*':
-  //     tmp = values[values_top] * values[values_top - 1];
-  //     break;
-  //   case '/':
-  //     tmp = values[values_top] / values[values_top - 1];
-  //     break;
-  //   case ')':
-  //     tmp = values[values_top];
-  //     values_top++;
-  //     ops_top--;
-  //     break;
-  //   case '&':
-  //     break;
-  //   case '=':
-  //     break;
-  //   case '!':
-  //     break;
-  //   }
-  //   ops_top--;
-  //   values[--values_top] = tmp;
-  // }
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
   return values[0];
