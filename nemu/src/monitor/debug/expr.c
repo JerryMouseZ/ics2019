@@ -299,10 +299,12 @@ expr(char *e, bool *success)
             tmp = values[values_top] - values[values_top - 1];
             break;
           case '%':
+            printf("%\n");
             tmp = vaddr_read(values[values_top], 4);
             values_top++;
             break;
           case '*':
+            printf("*\n");
             tmp = values[values_top] * values[values_top - 1];
             break;
           case '/':
