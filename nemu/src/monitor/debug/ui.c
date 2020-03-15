@@ -105,11 +105,10 @@ static int cmd_x(char *args)
     return -1;
   // 这里要把物理地址转虚拟地址
 
-  for (int i = 0; i < n; i+=4)
+  for (int i = 0; i < n; i++)
   {
-    printf("0x%08x ", addr);
-    printf("0x%08x\n", vaddr_read(addr, 4));
-    addr += 4;
+    printf("0x%08x : ", addr + i);
+    printf("0x%02x\n", vaddr_read(addr, 1));
   }
   printf("\n");
   return 0;
