@@ -1,3 +1,4 @@
+AM_HOME=/home/jz/ics2019/nexus-am
 include $(AM_HOME)/Makefile.check
 .PHONY: all run clean latest $(ALL)
 
