@@ -31,10 +31,10 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
+  // 有符号怎么处理
   uint32_t result = instr_fetch(pc, op->width);
-  op->simm = result;
-  // TODO();
-
+  bool sim = result >>31 ;
+  op->simm = sim ? (-result) : result;
   rtl_li(&op->val, op->simm);
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
