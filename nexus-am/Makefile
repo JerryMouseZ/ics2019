@@ -1,6 +1,5 @@
-include Makefile.check
-
 AM_HOME ?= $(shell pwd)
+include Makefile.check
 
 default:
 	@$(MAKE) -s -C am
