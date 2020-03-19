@@ -28,7 +28,6 @@ make_EHelper(call) {
   // the target address is calculated at the decode stage
   // TODO();
   printf("is_jmp: %d\n",decinfo.is_jmp);
-  decinfo.is_jmp = 1;
   // decinfo.jmp_pc = 1;
   print_asm("call %x", decinfo.jmp_pc);
 }
