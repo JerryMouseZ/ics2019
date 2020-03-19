@@ -260,12 +260,14 @@ make_DHelper(a2O) {
   decode_op_O(pc, id_dest, false);
 }
 
+//call
 make_DHelper(J) {
   decode_op_SI(pc, id_dest, false);
   // the target address can be computed in the decode stage
   decinfo.jmp_pc = id_dest->simm + *pc;
 }
 
+//push or pop
 make_DHelper(push_SI) {
   decode_op_SI(pc, id_dest, true);
 }
