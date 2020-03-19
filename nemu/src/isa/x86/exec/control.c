@@ -29,6 +29,7 @@ make_EHelper(call) {
   // TODO();
   // printf("is_jmp: %d\n",decinfo.is_jmp);
   decinfo.is_jmp = 1;
+  printf("push seq_pc\n");
   rtl_push(decinfo.seq_pc);
   print_asm("call %x", decinfo.jmp_pc);
 }
