@@ -58,7 +58,6 @@ static inline void update_pc(void)
   if (decinfo.is_jmp)
   {
     decinfo.is_jmp = 0;
-    cpu.pc = decinfo.jmp_pc;
   }
   else
   {
