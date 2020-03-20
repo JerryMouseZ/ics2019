@@ -63,8 +63,10 @@ static inline void rtl_is_sub_overflow(rtlreg_t *dest,
                                        const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width)
 {
   // dest <- is_overflow(src1 - src2)
-  
-  TODO();
+  int64_t result = *src1 - *src2;
+  //判断result33位是否为1
+  if(result < -0x80000000)
+    *dest = 1;
 }
 
 static inline void rtl_is_sub_carry(rtlreg_t *dest,
@@ -91,11 +93,11 @@ static inline void rtl_is_add_carry(rtlreg_t *dest,
 #define make_rtl_setget_eflags(f)                             \
   static inline void concat(rtl_set_, f)(const rtlreg_t *src) \
   {                                                           \
-      cpu.eflags.f = *src;                                                  \
+    cpu.eflags.f = *src;                                      \
   }                                                           \
   static inline void concat(rtl_get_, f)(rtlreg_t * dest)     \
   {                                                           \
-      *dest = cpu.eflags.f;                                               \
+    *dest = cpu.eflags.f;                                     \
   }
 
 make_rtl_setget_eflags(CF)
@@ -106,13 +108,29 @@ make_rtl_setget_eflags(CF)
                 static inline void rtl_update_ZF(const rtlreg_t *result, int width)
 {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  TODO();
+  for (int i = 0; i < width; i++)
+  {
+    if (result[i] == 0)
+    {
+      cpu.eflags.ZF = 1;
+      break;
+    }
+    cpu.eflags.ZF = 0;
+  }
 }
 
 static inline void rtl_update_SF(const rtlreg_t *result, int width)
 {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  TODO();
+  for (int i = 0; i < width; i++)
+  {
+    if (result[i] & 0x80000000)
+    {
+      cpu.eflags.SF = 1;
+      break;
+    }
+    cpu.eflags.SF = 0;
+  }
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t *result, int width)
