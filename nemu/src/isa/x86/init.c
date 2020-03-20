@@ -18,6 +18,7 @@ static void restart() {
   cpu.pc = PC_START;
   // init EFLAGS
   cpu.eflag = 0x2;
+  
 }
 
 void init_isa(void) {

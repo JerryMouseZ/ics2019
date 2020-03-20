@@ -65,7 +65,7 @@ static inline void rtl_is_sub_overflow(rtlreg_t *dest,
   // dest <- is_overflow(src1 - src2)
   int64_t result = *src1 - *src2;
   //判断result33位是否为1
-  if(result < -0x80000000)
+  if(result < -0x80000000L)
     *dest = 1;
 }
 
