@@ -45,7 +45,6 @@ static inline void rtl_push(const rtlreg_t *src1)
 {
   // esp <- esp - 4
   // M[esp] <- src1
-  // TODO();
   cpu.esp = cpu.esp - 4;
   vaddr_write(cpu.esp, *src1, 4);
 }
@@ -54,7 +53,6 @@ static inline void rtl_pop(rtlreg_t *dest)
 {
   // dest <- M[esp]
   // esp <- esp + 4
-  //TODO();
   *dest = vaddr_read(cpu.esp, 4);
   cpu.esp = cpu.esp - 4;
 }
@@ -87,7 +85,6 @@ static inline void rtl_is_add_overflow(rtlreg_t *dest,
                                        const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width)
 {
   // dest <- is_overflow(src1 + src2)
-  //TODO();
   int64_t result = (int)*src1 + (int)*src2;
   if(result < -0x80000000L || result > 0x7fffffff)
     *dest = 1;
@@ -99,7 +96,6 @@ static inline void rtl_is_add_carry(rtlreg_t *dest,
                                     const rtlreg_t *res, const rtlreg_t *src1)
 {
   // dest <- is_carry(src1 + src2)
-  //TODO();
   int64_t result = (int)*src1 + (int)*res;
   if(result < -0x80000000L || result > 0x7fffffff)
     *dest = 1;
