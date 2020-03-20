@@ -64,8 +64,20 @@ typedef struct
       rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
     };
   };
+  union{
+    struct {
+      int CF:1;
+      int x1:5;
+      int ZF:1;
+      int SF:1;
+      int x2:1;
+      int IF:1;
+      int x3:1;
+      int OF:1;
+    }eflags;
+    rtlreg_t eflag;
+  };
   vaddr_t pc;
-
 } CPU_state;
 
 static inline int check_reg_index(int index)

@@ -12,6 +12,8 @@ make_EHelper(sub)
   // TODO();
   //dest - src
   rtl_subi(&decinfo.dest.val, &decinfo.src.val, &decinfo.src2.val);
+  //置位寄存器
+  
   print_asm_template2(sub);
 }
 
