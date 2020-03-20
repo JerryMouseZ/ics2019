@@ -63,31 +63,48 @@ static inline void rtl_is_sub_overflow(rtlreg_t *dest,
                                        const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width)
 {
   // dest <- is_overflow(src1 - src2)
-  int64_t result = *src1 - *src2;
-  //判断result33位是否为1
-  if(result < -0x80000000L)
+  int a = *src1, b = *src2;
+  int64_t result = a - b;
+  if (result < -0x80000000L || result > 0x7ffffff)
     *dest = 1;
+  else
+    *dest = 0;
 }
 
 static inline void rtl_is_sub_carry(rtlreg_t *dest,
                                     const rtlreg_t *res, const rtlreg_t *src1)
 {
   // dest <- is_carry(src1 - src2)
-  TODO();
+  int a = *src1, b = *res;
+  int64_t result = a - b;
+  if (result < -0x80000000L || result > 0x7ffffff)
+    *dest = 1;
+  else
+    *dest = 0;
 }
 
 static inline void rtl_is_add_overflow(rtlreg_t *dest,
                                        const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width)
 {
   // dest <- is_overflow(src1 + src2)
-  TODO();
+  //TODO();
+  int64_t result = (int)*src1 + (int)*src2;
+  if(result < -0x80000000L || result > 0x7fffffff)
+    *dest = 1;
+  else
+    *dest = 0;
 }
 
 static inline void rtl_is_add_carry(rtlreg_t *dest,
                                     const rtlreg_t *res, const rtlreg_t *src1)
 {
   // dest <- is_carry(src1 + src2)
-  TODO();
+  //TODO();
+  int64_t result = (int)*src1 + (int)*res;
+  if(result < -0x80000000L || result > 0x7fffffff)
+    *dest = 1;
+  else
+    *dest = 0;
 }
 
 #define make_rtl_setget_eflags(f)                             \
