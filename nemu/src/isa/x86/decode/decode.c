@@ -22,19 +22,15 @@ static inline make_DopHelper(I) {
 /* sign immediate */
 static inline make_DopHelper(SI) {
   assert(op->width == 1 || op->width == 4);
-
   op->type = OP_TYPE_IMM;
-
   /* TODO: Use instr_fetch() to read `op->width' bytes of memory
    * pointed by 'pc'. Interpret the result as a signed immediate,
    * and assign it to op->simm.
    *
    op->simm = ???
    */
-  // 有符号怎么处理
-  uint32_t result = instr_fetch(pc, op->width);
-  bool sim = result >>31 ;
-  op->simm = sim ? (-result) : result;
+  // 符号拓展
+  op->simm = instr_fetch(pc, op->width);
   rtl_li(&op->val, op->simm);
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
@@ -264,6 +260,7 @@ make_DHelper(a2O) {
 make_DHelper(J) {
   decode_op_SI(pc, id_dest, false);
   // the target address can be computed in the decode stage
+  printf("%x\n", id_dest->simm);
   decinfo.jmp_pc = id_dest->simm + *pc;
 }
 

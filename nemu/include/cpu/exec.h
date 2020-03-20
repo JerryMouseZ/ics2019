@@ -59,7 +59,6 @@ static inline void update_pc(void)
   {
     decinfo.is_jmp = 0;
     cpu.pc = decinfo.jmp_pc;
-    printf("jmp %x\n", decinfo.jmp_pc);
   }
   else
   {
