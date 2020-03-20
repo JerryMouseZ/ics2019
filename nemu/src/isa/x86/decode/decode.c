@@ -29,7 +29,7 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  // 符号拓展
+  // 似乎直接取就行了
   op->simm = instr_fetch(pc, op->width);
   rtl_li(&op->val, op->simm);
 
@@ -260,7 +260,6 @@ make_DHelper(a2O) {
 make_DHelper(J) {
   decode_op_SI(pc, id_dest, false);
   // the target address can be computed in the decode stage
-  printf("%x\n", id_dest->simm);
   decinfo.jmp_pc = id_dest->simm + *pc;
 }
 

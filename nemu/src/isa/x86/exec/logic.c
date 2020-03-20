@@ -14,8 +14,8 @@ make_EHelper(and) {
 }
 
 make_EHelper(xor) {
-  TODO();
-
+  // TODO();
+  rtl_xor(&decinfo.dest.val,&decinfo.src.val,&decinfo.src2.val);
   print_asm_template2(xor);
 }
 
