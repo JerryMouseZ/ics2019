@@ -76,7 +76,7 @@ static OpcodeEntry opcode_table [512] = {
   // 0x55 push 要知道push的译码函数
   /* 0x54 */	EMPTY, IDEX(r,push), EMPTY, EMPTY,
   /* 0x58 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x5c */	EMPTY, IDEX(push_SI, pop), EMPTY, EMPTY,
+  /* 0x5c */	EMPTY, IDEX(r, pop), EMPTY, EMPTY,
   /* 0x60 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x64 */	EMPTY, EMPTY, EX(operand_size), EMPTY,
   /* 0x68 */	IDEX(I,push), EMPTY, EMPTY, EMPTY,
