@@ -275,7 +275,7 @@ make_DHelper(J) {
   decinfo.jmp_pc = id_dest->simm + *pc;
 }
 
-//push or pop
+
 make_DHelper(push_SI) {
   decode_op_SI(pc, id_dest, true);
 }
