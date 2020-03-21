@@ -16,7 +16,6 @@ void _putc(char ch) {
 
 void _halt(int code) {
   nemu_trap(code);
-
   // should not reach here
   while (1);
 }
