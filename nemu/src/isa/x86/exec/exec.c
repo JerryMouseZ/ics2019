@@ -145,7 +145,6 @@ static OpcodeEntry opcode_table [512] = {
   /* 0x50 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x54 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x58 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  //0x5d pop
   /* 0x5c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x60 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x64 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -155,12 +154,12 @@ static OpcodeEntry opcode_table [512] = {
   /* 0x74 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x78 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x7c */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x80 */	EMPTY, EMPTY, EMPTY,IDEX(I2r,sub),
+  /* 0x80 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x84 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x88 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x8c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x90 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x94 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x94 */	IDEX(r,sete), EMPTY, EMPTY, EMPTY,
   /* 0x98 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x9c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xa0 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -197,9 +196,14 @@ static make_EHelper(2byte_esc) {
 }
 
 void isa_exec(vaddr_t *pc) {
-  //先取一个字节，再根据一个字节算出剩下的字节
+  //先取一个字节，再根据opcode算出剩下的字节
   uint32_t opcode = instr_fetch(pc, 1);
-  decinfo.opcode = opcode;
-  set_width(opcode_table[opcode].width);
-  idex(pc, &opcode_table[opcode]);
+  if(opcode == 0x0f){
+    exec_2byte_esc(pc);
+  }
+  else{
+    decinfo.opcode = opcode;
+    set_width(opcode_table[opcode].width);
+    idex(pc, &opcode_table[opcode]);
+  }
 }
