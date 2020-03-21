@@ -21,4 +21,7 @@ make_EHelper(cmp);
 make_EHelper(ret);
 make_EHelper(lea);
 make_EHelper(nop);
-make_EHelper(sete);
+make_EHelper(sete)
+{
+  rtl_set_ZF(&decinfo.src.reg);
+}

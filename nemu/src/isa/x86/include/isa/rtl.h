@@ -152,4 +152,5 @@ static inline void rtl_update_ZFSF(const rtlreg_t *result, int width)
   rtl_update_SF(result, width);
 }
 
+
 #endif
