@@ -119,7 +119,6 @@ static OpcodeEntry opcode_table [512] = {
   /* 0xf8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xfc */	EMPTY, EMPTY, IDEXW(E, gp4, 1), IDEX(E, gp5),
 
-  // pa2 
 
 /*2 byte_opcode_table */
 
