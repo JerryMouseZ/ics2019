@@ -8,6 +8,17 @@ make_EHelper(jmp) {
   print_asm("jmp %x", decinfo.jmp_pc);
 }
 
+make_EHelper(jne)
+{
+  bool zf;
+  rtl_get_ZF(&zf);
+  if(!zf)
+  {
+    rtl_j(decinfo.jmp_pc);
+  }
+  print_asm("jne %x",decinfo.jmp_pc);
+}
+
 make_EHelper(jcc) {
   // the target address is calculated at the decode stage
   uint32_t cc = decinfo.opcode & 0xf;
