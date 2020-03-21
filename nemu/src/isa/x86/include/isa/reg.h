@@ -74,6 +74,8 @@ typedef struct
       int IF:1;
       int x3:1;
       int OF:1;
+      int x4:4;
+      int x5:16;
     }eflags;
     rtlreg_t eflag;
   };

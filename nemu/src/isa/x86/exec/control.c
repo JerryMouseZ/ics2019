@@ -37,7 +37,6 @@ make_EHelper(ret) {
   // TODO();
   //push 是将pc入栈, ret就要出栈到pc中
   rtl_pop(&decinfo.jmp_pc);
-  printf("ret addr: %x\n",decinfo.jmp_pc);
   rtl_j(decinfo.jmp_pc);
   print_asm("ret");
 }
