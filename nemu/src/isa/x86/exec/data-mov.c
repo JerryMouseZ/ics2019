@@ -114,6 +114,7 @@ make_EHelper(leave)
   print_asm("leave");
 }
 
+//不懂这是啥
 make_EHelper(cltd)
 {
   if (decinfo.isa.is_operand_size_16)
@@ -144,6 +145,7 @@ make_EHelper(cwtl)
 
 make_EHelper(movsx)
 {
+  //符号拓展之后写入id_dest
   id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
   rtl_sext(&s0, &id_src->val, id_src->width);
   operand_write(id_dest, &s0);
@@ -152,8 +154,8 @@ make_EHelper(movsx)
 
 make_EHelper(movzx)
 {
-  // id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
-  // operand_write(id_dest, &id_src->val);
+  id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
+  operand_write(id_dest, &id_src->val);
   print_asm_template2(movzx);
 }
 

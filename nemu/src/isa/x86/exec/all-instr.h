@@ -2,6 +2,7 @@
 
 make_EHelper(mov);
 make_EHelper(movzx);
+make_EHelper(movsx);
 make_EHelper(operand_size);
 
 make_EHelper(inv);
@@ -13,7 +14,7 @@ make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(sub);
 make_EHelper(add);
-make_EHelper(xor);
+make_EHelper (xor);
 make_EHelper(or);
 make_EHelper(adc);
 make_EHelper(sbb);
@@ -28,3 +29,4 @@ make_EHelper(sete)
 }
 make_EHelper(pusha);
 make_EHelper(popa);
+make_EHelper(leave);

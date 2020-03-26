@@ -61,46 +61,84 @@ static inline void rtl_is_sub_overflow(rtlreg_t *dest,
                                        const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width)
 {
   // dest <- is_overflow(src1 - src2)
-  int a = *src1, b = *src2;
-  int64_t result = a - b;
-  if (result < -0x80000000L || result > 0x7ffffff)
-    *dest = 1;
-  else
+  //同号相减不会溢出，正数减负数或者负数减正数
+  if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
+  {
     *dest = 0;
+  }
+  else if (*src1 >> (width * 8 - 1) || *src2 >> (width * 8 - 1))
+  {
+    if ((*src1 >> (width * 8 - 1)) & 1 ^ (*res >> (width * 8 - 1)))
+    {
+      *dest = 1;
+    }
+    else
+    {
+      *dest = 0;
+    }
+  }
+  else
+  {
+    *dest = 0;
+  }
 }
 
 static inline void rtl_is_sub_carry(rtlreg_t *dest,
                                     const rtlreg_t *res, const rtlreg_t *src1)
 {
   // dest <- is_carry(src1 - src2)
-  int a = *src1, b = *res;
-  int64_t result = a - b;
-  if (result < -0x80000000L || result > 0x7ffffff)
+  if (*res > *src1)
     *dest = 1;
   else
+  {
     *dest = 0;
+  }
 }
 
 static inline void rtl_is_add_overflow(rtlreg_t *dest,
                                        const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width)
 {
+  //判断有符号数的
   // dest <- is_overflow(src1 + src2)
-  int64_t result = (int)*src1 + (int)*src2;
-  if(result < -0x80000000L || result > 0x7fffffff)
-    *dest = 1;
+  //两个负数相加，结果变成正数或者两个整数相加，结果变成负数
+  //　这里就当width为４吧
+  if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
+  {
+    //两个操作数是负数，结果要变成正数
+    if (!(*res >> (width * 8 - 1)))
+      *dest = 1;
+    else
+    {
+      *dest = 0;
+    }
+  }
+  else if (!(*src1 >> (width * 8 - 1)) && !(*src2 >> (width * 8 - 1)))
+  {
+    if (*res >> (width * 8 - 1))
+      *dest = 1;
+    else
+    {
+      *dest = 0;
+    }
+  }
   else
+  {
     *dest = 0;
+  }
 }
 
 static inline void rtl_is_add_carry(rtlreg_t *dest,
                                     const rtlreg_t *res, const rtlreg_t *src1)
 {
   // dest <- is_carry(src1 + src2)
-  int64_t result = (int)*src1 + (int)*res;
-  if(result < -0x80000000L || result > 0x7fffffff)
+  if (*res < *src1)
+  {
     *dest = 1;
+  }
   else
+  {
     *dest = 0;
+  }
 }
 
 #define make_rtl_setget_eflags(f)                             \
@@ -121,27 +159,40 @@ make_rtl_setget_eflags(CF)
                 static inline void rtl_update_ZF(const rtlreg_t *result, int width)
 {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  for (int i = 0; i < width; i++)
+  uint32_t flags = 0;
+  switch (width)
   {
-    if (result[i] == 0)
-    {
-      cpu.eflags.ZF = 1;
-      break;
-    }
+  case 4:
+    flags = 0xffffffff;
+    break;
+  case 2:
+    flags = 0xffff;
+    break;
+  case 1:
+    flags = 0xff;
+    break;
+  default:
+    assert(0);
+  }
+  if (*result & flags)
+  {
     cpu.eflags.ZF = 0;
+  }
+  else
+  {
+    cpu.eflags.ZF = 1;
   }
 }
 
 static inline void rtl_update_SF(const rtlreg_t *result, int width)
 {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  for (int i = 0; i < width; i++)
+  if ((*result >> (width * 8 - 1)) & 1)
   {
-    if (result[i] & 0x80000000)
-    {
-      cpu.eflags.SF = 1;
-      break;
-    }
+    cpu.eflags.SF = 1;
+  }
+  else
+  {
     cpu.eflags.SF = 0;
   }
 }
@@ -151,6 +202,5 @@ static inline void rtl_update_ZFSF(const rtlreg_t *result, int width)
   rtl_update_ZF(result, width);
   rtl_update_SF(result, width);
 }
-
 
 #endif
