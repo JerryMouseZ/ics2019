@@ -39,8 +39,8 @@ make_EHelper(or)
   //TODO();
   t0 = id_dest->val;
   t1 = id_src->val;
-  rtl_xor(&s0, &t0, &t1);
-  rtl_or(&id_dest->val,&id_dest->val, &id_src->val);
+  rtl_or(&s0, &t0, &t1);
+  
   // operand_write(id_dest, &id_dest->val);
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
   print_asm_template2(or);
