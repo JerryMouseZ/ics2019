@@ -27,7 +27,7 @@ make_EHelper(pusha)
   //16位的还是注意一下
   if (decinfo.isa.is_operand_size_16)
   {
-    uint32_t temp = reg_w(R_SP);
+    uint32_t temp = (uint32_t)reg_w(R_SP);
     uint32_t va = 0;
     for (int i = R_AX; i <= R_DI; i++)
     {
@@ -101,8 +101,10 @@ make_EHelper(leave)
   // TODO();
   if (decinfo.isa.is_operand_size_16)
   {
+    uint32_t va = 0;
     reg_w(R_SP) = reg_w(R_BP);
-    rtl_pop(&reg_w(R_BP));
+    rtl_pop(&va);
+    reg_w(R_BP) = (uint16_t)va;
   }
   else
   {
