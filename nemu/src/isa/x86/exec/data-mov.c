@@ -31,7 +31,7 @@ make_EHelper(pusha)
     {
       if (i != R_SP)
       {
-        rtl_push(&reg_l(i));
+        rtl_push(&reg_w(i));
       }
       else
       {
@@ -66,7 +66,7 @@ make_EHelper(popa)
     {
       if (i != R_SP)
       {
-        rtl_pop(&reg_l(i));
+        rtl_pop(&reg_w(i));
       }
       else
       {
@@ -92,7 +92,17 @@ make_EHelper(popa)
 
 make_EHelper(leave)
 {
-  TODO();
+  // TODO();
+  if (decinfo.isa.is_operand_size_16)
+  {
+    reg_w(R_SP) = reg_w(R_BP);
+    rtl_pop(&reg_w(R_BP));
+  }
+  else
+  {
+    reg_l(R_ESP) = reg_l(R_EBP);
+    rtl_pop(&reg_l(R_EBP));
+  }
 
   print_asm("leave");
 }
