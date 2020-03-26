@@ -13,7 +13,9 @@ make_EHelper(and)
   // TODO();
   printf("esp : 0x%x\n", cpu.esp);
   rtl_and(&id_dest->val,&id_dest->val, &id_src->val);
+  printf("esp : 0x%x\n", cpu.esp);
   operand_write(id_dest, &id_dest->val);
+  printf("esp : 0x%x\n", cpu.esp);
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
   printf("esp : 0x%x\n", cpu.esp);
   print_asm_template2(and);
