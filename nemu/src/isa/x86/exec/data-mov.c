@@ -61,7 +61,7 @@ make_EHelper(popa)
   // TODO();//弹出所有寄存器
   if (decinfo.isa.is_operand_size_16)
   {
-    uint16_t temp = 0;
+    uint32_t temp = 0;
     for (int i = R_AX; i <= R_DI; i++)
     {
       if (i != R_SP)
