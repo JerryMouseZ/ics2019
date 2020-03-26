@@ -26,7 +26,7 @@ make_EHelper(pusha)
   // TODO(); //压入所有寄存器,不需要操作数
   if (decinfo.isa.is_operand_size_16)
   {
-    uint16_t temp = reg_l(R_SP);
+    uint32_t temp = reg_l(R_SP);
     for (int i = R_AX; i <= R_DI; i++)
     {
       if (i != R_SP)
