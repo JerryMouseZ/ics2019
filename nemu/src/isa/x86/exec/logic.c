@@ -11,15 +11,15 @@ make_EHelper(test)
 make_EHelper(and)
 {
   // TODO();
-  printf("esp : 0x%x\n", cpu.esp);
+  // printf("esp : 0x%x\n", cpu.esp);
   t0 = id_dest->val;
   t1 = id_src->val;
   rtl_and(&s0, &t0, &t1);
-  printf("esp : 0x%x\n", cpu.esp);
+ // printf("esp : 0x%x\n", cpu.esp);
   // operand_write(id_dest, &id_dest->val);
-  printf("esp : 0x%x\n", cpu.esp);
+ // printf("esp : 0x%x\n", cpu.esp);
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
-  printf("esp : 0x%x\n", cpu.esp);
+ // printf("esp : 0x%x\n", cpu.esp);
   print_asm_template2(and);
 }
 
