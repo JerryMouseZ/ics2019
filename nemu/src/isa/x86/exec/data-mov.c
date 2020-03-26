@@ -154,8 +154,10 @@ make_EHelper(movsx)
 
 make_EHelper(movzx)
 {
+  printf("checkpoint1\n");
   id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
   operand_write(id_dest, &id_src->val);
+  printf("checkpoint2\n");
   print_asm_template2(movzx);
 }
 
