@@ -30,3 +30,5 @@ make_EHelper(sete)
 make_EHelper(pusha);
 make_EHelper(popa);
 make_EHelper(leave);
+
+make_EHelper(test);

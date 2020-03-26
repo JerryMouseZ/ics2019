@@ -11,6 +11,6 @@ static inline const char *get_cc_name(int subcode)
   return cc_name[subcode];
 }
 
-void rtl_setcc(rtlreg_t *, uint8_t);
+void rtl_setcc(unsigned *, unsigned char);
 
 #endif
