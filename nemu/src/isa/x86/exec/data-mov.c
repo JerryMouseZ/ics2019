@@ -24,18 +24,22 @@ make_EHelper(pop)
 make_EHelper(pusha)
 {
   // TODO(); //压入所有寄存器,不需要操作数
+  //16位的还是注意一下
   if (decinfo.isa.is_operand_size_16)
   {
-    uint32_t temp = reg_l(R_SP);
+    uint32_t temp = reg_w(R_SP);
+    uint32_t va = 0;
     for (int i = R_AX; i <= R_DI; i++)
     {
       if (i != R_SP)
       {
-        rtl_push(&reg_w(i));
+        va = reg_w(i);
+        rtl_push(&va);
       }
       else
       {
-        rtl_push(&temp);
+        va = reg_w(i);
+        rtl_push(&va);
       }
     }
   }
@@ -62,11 +66,13 @@ make_EHelper(popa)
   if (decinfo.isa.is_operand_size_16)
   {
     uint32_t temp = 0;
+    uint32_t va = 0;
     for (int i = R_AX; i <= R_DI; i++)
     {
       if (i != R_SP)
       {
-        rtl_pop(&reg_w(i));
+        rtl_pop(&va);
+        reg_w(i) = (uint16_t)va;
       }
       else
       {
