@@ -33,6 +33,7 @@ make_EHelper(and)
   t1 = id_src->val;
   rtl_and(&s0, &t0, &t1);
   rtl_update_ZFSF(&s0, id_dest->width);
+  printf("esp : 0x%x\n", cpu.esp);
   operand_write(id_dest, &s0);
   printf("esp : 0x%x\n", cpu.esp);
   uint32_t dd = 0;
