@@ -38,8 +38,7 @@ make_EHelper(pusha)
       }
       else
       {
-        va = reg_w(i);
-        rtl_push(&va);
+        rtl_push(&temp);
       }
     }
   }
