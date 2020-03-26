@@ -45,7 +45,7 @@ static inline void rtl_push(const rtlreg_t *src1)
 {
   // esp <- esp - 4
   // M[esp] <- src1
-  printf("0x\n", cpu.esp);
+  printf("0x%x\n", cpu.esp);
   cpu.esp = cpu.esp - 4;
   vaddr_write(cpu.esp, *src1, 4);
   printf("checkpoint2\n");
