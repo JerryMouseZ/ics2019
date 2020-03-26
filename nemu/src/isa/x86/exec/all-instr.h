@@ -26,3 +26,5 @@ make_EHelper(sete)
 {
   rtl_set_ZF(&decinfo.src.reg);
 }
+make_EHelper(pusha);
+make_EHelper(popa);
