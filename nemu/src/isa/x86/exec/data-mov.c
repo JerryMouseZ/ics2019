@@ -161,6 +161,7 @@ make_EHelper(movzx)
 
 make_EHelper(lea)
 {
+  printf("esp : 0x%x\n", cpu.esp);
   operand_write(id_dest, &id_src->addr);
   print_asm_template2(lea);
 }
