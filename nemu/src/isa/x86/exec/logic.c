@@ -42,7 +42,7 @@ make_EHelper(or)
   rtl_or(&s0, &t0, &t1);
   
   // operand_write(id_dest, &id_dest->val);
-  rtl_update_ZFSF(&id_dest->val, id_dest->width);
+  rtl_update_ZFSF(&s0, id_dest->width);
   print_asm_template2(or);
 }
 
