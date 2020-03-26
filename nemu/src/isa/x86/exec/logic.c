@@ -11,7 +11,6 @@ make_EHelper(test)
 make_EHelper(and)
 {
   // TODO();
-  printf("esp : 0x%x\n", cpu.esp);
   rtl_and(&id_dest->val,&id_dest->val, &id_src->val);
   operand_write(id_dest, &id_dest->val);
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
