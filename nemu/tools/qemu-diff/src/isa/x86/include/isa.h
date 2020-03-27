@@ -7,12 +7,14 @@
 #include "../../../../../../src/isa/x86/include/isa/diff-test.h"
 
 union isa_gdb_regs {
-  struct {
+  struct
+  {
     uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
     uint32_t eip, eflags;
     uint32_t cs, ss, ds, es, fs, gs;
   };
-  struct {
+  struct
+  {
     // uint32_t array[77];
     uint32_t array[16];
   };

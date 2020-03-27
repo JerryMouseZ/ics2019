@@ -1,12 +1,12 @@
-#include "monitor/monitor.h"
 #include "monitor/expr.h"
+#include "monitor/monitor.h"
 #include "monitor/watchpoint.h"
 #include "nemu.h"
 // #include "x86/include/isa/reg.h"
 
-#include <stdlib.h>
-#include <readline/readline.h>
 #include <readline/history.h>
+#include <readline/readline.h>
+#include <stdlib.h>
 
 void cpu_exec(uint64_t);
 
@@ -53,6 +53,7 @@ static int cmd_si(char *args)
   else
   {
     int i = atoi(args);
+    printf("%d\n", i);
     cpu_exec(i);
   }
   return 0;
