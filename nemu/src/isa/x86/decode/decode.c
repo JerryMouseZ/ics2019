@@ -36,14 +36,15 @@ static inline make_DopHelper(SI) {
   {
     int sign = result & 0x8;
     if(sign)
-      op->simm = result | 0xffffff;
+      op->simm = result | 0xffffff00;
     else
       op->simm = result;
   }
   else{
     op->simm = result;
   }
-  rtl_li(&op->val, op->simm);
+  op->val = op->simm;
+  // rtl_li(&op->val, op->simm);
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
 }
