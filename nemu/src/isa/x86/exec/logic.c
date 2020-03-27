@@ -28,19 +28,15 @@ make_EHelper(and)
 {
   // TODO();
   // dest = dest && src
-  printf("esp : 0x%x\n", cpu.esp);
   t0 = id_dest->val;
   t1 = id_src->val;
   rtl_and(&s0, &t0, &t1);
   rtl_update_ZFSF(&s0, id_dest->width);
-  printf("esp : 0x%x\n", cpu.esp);
   // operand_write(id_dest, &s0);
-  printf("esp : 0x%x\n", cpu.esp);
   uint32_t dd = 0;
   rtl_set_OF(&dd);
   rtl_set_CF(&dd);
 
-  printf("esp : 0x%x\n", cpu.esp);
   print_asm_template2(and);
 }
 
@@ -49,10 +45,8 @@ make_EHelper (xor)
   // TODO();
   t0 = id_dest->val;
   t1 = id_src->val;
-  printf("esp : 0x%x\n", cpu.esp);
   rtl_xor(&s0, &t0, &t1);
   operand_write(id_dest, &s0);
-  printf("esp : 0x%x\n", cpu.esp);
   rtl_update_ZFSF(&s0, id_dest->width);
   uint32_t dd = 0;
   rtl_set_CF(&dd);

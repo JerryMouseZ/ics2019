@@ -1,7 +1,8 @@
-#include "cpu/exec.h"
 #include "cc.h"
+#include "cpu/exec.h"
 
-make_EHelper(jmp) {
+make_EHelper(jmp)
+{
   // the target address is calculated at the decode stage
   rtl_j(decinfo.jmp_pc);
 
@@ -10,16 +11,29 @@ make_EHelper(jmp) {
 
 make_EHelper(jne)
 {
-  bool zf;
+  uint32_t zf;
   rtl_get_ZF(&zf);
-  if(!zf)
+  if (!zf)
   {
     rtl_j(decinfo.jmp_pc);
   }
-  print_asm("jne %x",decinfo.jmp_pc);
+  print_asm("jne %x", decinfo.jmp_pc);
 }
 
-make_EHelper(jcc) {
+make_EHelper(je)
+{
+  uint32_t zf;
+  rtl_get_ZF(&zf);
+  if (zf)
+  {
+    printf("jmp\n");
+    rtl_j(decinfo.jmp_pc);
+  }
+  print_asm("je %x", decinfo.jmp_pc);
+}
+
+make_EHelper(jcc)
+{
   // the target address is calculated at the decode stage
   uint32_t cc = decinfo.opcode & 0xf;
   rtl_setcc(&s0, cc);
@@ -29,13 +43,15 @@ make_EHelper(jcc) {
   print_asm("j%s %x", get_cc_name(cc), decinfo.jmp_pc);
 }
 
-make_EHelper(jmp_rm) {
+make_EHelper(jmp_rm)
+{
   rtl_jr(&id_dest->val);
 
   print_asm("jmp *%s", id_dest->str);
 }
 
-make_EHelper(call) {
+make_EHelper(call)
+{
   // the target address is calculated at the decode stage
   // TODO();
   // printf("is_jmp: %d\n",decinfo.is_jmp);
@@ -44,7 +60,8 @@ make_EHelper(call) {
   print_asm("call %x", decinfo.jmp_pc);
 }
 
-make_EHelper(ret) {
+make_EHelper(ret)
+{
   // TODO();
   //push 是将pc入栈, ret就要出栈到pc中
   rtl_pop(&decinfo.jmp_pc);
@@ -52,13 +69,15 @@ make_EHelper(ret) {
   print_asm("ret");
 }
 
-make_EHelper(ret_imm) {
+make_EHelper(ret_imm)
+{
   TODO();
 
   print_asm("ret %s", id_dest->str);
 }
 
-make_EHelper(call_rm) {
+make_EHelper(call_rm)
+{
   TODO();
 
   print_asm("call *%s", id_dest->str);

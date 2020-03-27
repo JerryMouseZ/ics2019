@@ -32,3 +32,7 @@ make_EHelper(popa);
 make_EHelper(leave);
 
 make_EHelper(test);
+make_EHelper(je);
+make_EHelper(inc);
+make_EHelper(dec);
+make_EHelper(jcc);
