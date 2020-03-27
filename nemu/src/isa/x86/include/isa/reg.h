@@ -48,7 +48,9 @@ enum
 
 typedef struct
 {
-  union {
+  union
+  {
+    /* data */
     union {
       uint32_t _32;
       uint16_t _16;
@@ -64,22 +66,24 @@ typedef struct
       rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
     };
   };
-  union{
-    struct {
-      int CF:1;
-      int x1:5;
-      int ZF:1;
-      int SF:1;
-      int x2:1;
-      int IF:1;
-      int x3:1;
-      int OF:1;
-      int x4:4;
-      int x5:16;
-    }eflags;
+  vaddr_t pc;
+  union {
+    struct
+    {
+      int CF : 1;
+      int x1 : 5;
+      int ZF : 1;
+      int SF : 1;
+      int x2 : 1;
+      int IF : 1;
+      int x3 : 1;
+      int OF : 1;
+      int x4 : 4;
+      int x5 : 16;
+    } eflags;
     rtlreg_t eflag;
   };
-  vaddr_t pc;
+  uint32_t cs, ss, ds, es, fs, gs;
 } CPU_state;
 
 static inline int check_reg_index(int index)

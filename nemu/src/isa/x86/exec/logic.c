@@ -32,7 +32,7 @@ make_EHelper(and)
   t1 = id_src->val;
   rtl_and(&s0, &t0, &t1);
   rtl_update_ZFSF(&s0, id_dest->width);
-  // operand_write(id_dest, &s0);
+  operand_write(id_dest, &s0);
   uint32_t dd = 0;
   rtl_set_OF(&dd);
   rtl_set_CF(&dd);
@@ -60,7 +60,7 @@ make_EHelper(or)
   t0 = id_dest->val;
   t1 = id_src->val;
   rtl_or(&s0, &t0, &t1);
-  // operand_write(id_dest, &s0);
+  operand_write(id_dest, &s0);
   rtl_update_ZFSF(&s0, id_dest->width);
   uint32_t dd = 0;
   rtl_set_CF(&dd);

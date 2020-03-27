@@ -59,7 +59,7 @@ bool gdb_getregs(union isa_gdb_regs *r) {
     p[8] = c;
     p += 8;
   }
-
+  // printf("eflag:%x\n", r->eflags);
   free(reply);
 
   return true;

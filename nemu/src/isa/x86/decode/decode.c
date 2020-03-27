@@ -33,20 +33,9 @@ static inline make_DopHelper(SI)
    */
   // 似乎直接取就行了
   // 如果是1位的话要符号拓展
-  uint32_t result = instr_fetch(pc, op->width);
-  if (op->width == 1)
-  {
-    int sign = result & 0x8;
-    if (sign)
-      op->simm = result | 0xffffff00;
-    else
-      op->simm = result;
-  }
-  else
-  {
-    op->simm = result;
-  }
-  op->val = op->simm;
+  op->val = instr_fetch(pc, op->width);
+  rtl_sext(&op->val, &op->val, op->width);
+  op->simm = op->val;
   // rtl_li(&op->val, op->simm);
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);

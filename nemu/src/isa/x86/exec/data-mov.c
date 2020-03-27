@@ -16,7 +16,9 @@ make_EHelper(push)
 make_EHelper(pop)
 {
   // TODO();
+
   rtl_pop(&decinfo.dest.val);
+  operand_write(id_dest, &decinfo.dest.val);
   print_asm_template1(pop);
 }
 
