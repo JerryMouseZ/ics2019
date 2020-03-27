@@ -49,7 +49,7 @@ make_EHelper (xor)
   // TODO();
   t0 = id_dest->val;
   t1 = id_src->val;
-  rtl_xor(&s0, &t0, &t1);
+  rtl_xori(&s0, &t0, &t1);
   operand_write(id_dest, &s0);
   rtl_update_ZFSF(&s0, id_dest->width);
   uint32_t dd = 0;
