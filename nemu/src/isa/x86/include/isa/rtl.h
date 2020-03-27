@@ -104,6 +104,7 @@ static inline void rtl_is_add_overflow(rtlreg_t *dest,
   // dest <- is_overflow(src1 + src2)
   //两个负数相加，结果变成正数或者两个整数相加，结果变成负数
   //　这里就当width为４吧
+  //
   if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
   {
     //两个操作数是负数，结果要变成正数

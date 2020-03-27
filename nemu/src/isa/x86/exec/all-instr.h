@@ -9,7 +9,7 @@ make_EHelper(inv);
 make_EHelper(nemu_trap);
 
 make_EHelper(call);
-make_EHelper(jne);
+
 make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(sub);
@@ -30,7 +30,20 @@ make_EHelper(popa);
 make_EHelper(leave);
 
 make_EHelper(test);
-make_EHelper(je);
 make_EHelper(inc);
 make_EHelper(dec);
 make_EHelper(jcc);
+make_EHelper(jmp);
+
+make_EHelper(sar);
+make_EHelper(shl);
+make_EHelper(shr);
+make_EHelper(not);
+make_EHelper(neg);
+make_EHelper(mul);
+make_EHelper(imul1);
+make_EHelper(imul2);
+make_EHelper(imul3);
+make_EHelper(div);
+make_EHelper(idiv);
+make_EHelper(cltd);
