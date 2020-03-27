@@ -51,7 +51,7 @@ make_EHelper (xor)
   t1 = id_src->val;
   printf("esp : 0x%x\n", cpu.esp);
   rtl_xori(&s0, &t0, &t1);
-  // operand_write(id_dest, &s0);
+  operand_write(id_dest, &s0);
   printf("esp : 0x%x\n", cpu.esp);
   rtl_update_ZFSF(&s0, id_dest->width);
   uint32_t dd = 0;
