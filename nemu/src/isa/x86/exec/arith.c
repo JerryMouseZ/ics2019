@@ -143,7 +143,6 @@ make_EHelper(sbb)
 
   operand_write(id_dest, &s1);
 
-  printf("width:%d\n", id_dest->width);
   if (id_dest->width != 4)
   {
     rtl_andi(&s1, &s1, 0xffffffffu >> ((4 - id_dest->width) * 8));

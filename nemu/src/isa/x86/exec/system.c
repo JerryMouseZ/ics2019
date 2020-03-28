@@ -1,18 +1,21 @@
 #include "cpu/exec.h"
 
-make_EHelper(lidt) {
+make_EHelper(lidt)
+{
   TODO();
 
   print_asm_template1(lidt);
 }
 
-make_EHelper(mov_r2cr) {
+make_EHelper(mov_r2cr)
+{
   TODO();
 
   print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
 }
 
-make_EHelper(mov_cr2r) {
+make_EHelper(mov_cr2r)
+{
   TODO();
 
   print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));
@@ -20,7 +23,8 @@ make_EHelper(mov_cr2r) {
   difftest_skip_ref();
 }
 
-make_EHelper(int) {
+make_EHelper(int)
+{
   TODO();
 
   print_asm("int %s", id_dest->str);
@@ -28,7 +32,8 @@ make_EHelper(int) {
   difftest_skip_dut(1, 2);
 }
 
-make_EHelper(iret) {
+make_EHelper(iret)
+{
   TODO();
 
   print_asm("iret");
@@ -41,14 +46,50 @@ void pio_write_l(ioaddr_t, uint32_t);
 void pio_write_w(ioaddr_t, uint32_t);
 void pio_write_b(ioaddr_t, uint32_t);
 
-make_EHelper(in) {
-  TODO();
-
+make_EHelper(in)
+{
+  switch (id_src->width)
+  {
+  case 1:
+    t2 = pio_read_b(id_src->val);
+    break;
+  case 2:
+    t2 = pio_read_w(id_src->val);
+    break;
+  case 4:
+    t2 = pio_read_l(id_src->val);
+    break;
+  default:
+    break;
+  }
+  operand_write(id_dest, &t2);
   print_asm_template2(in);
+
+#ifdef DIFF_TEST
+  difftest_skip_ref();
+#endif
 }
 
-make_EHelper(out) {
-  TODO();
+make_EHelper(out)
+{
+  switch (id_src->width)
+  {
+  case 1:
+    pio_write_b(id_dest->val, id_src->val);
+    break;
+  case 2:
+    pio_write_w(id_dest->val, id_src->val);
+    break;
+  case 4:
+    pio_write_l(id_dest->val, id_src->val);
+    break;
+  default:
+    break;
+  }
 
   print_asm_template2(out);
+
+#ifdef DIFF_TEST
+  difftest_skip_ref();
+#endif
 }

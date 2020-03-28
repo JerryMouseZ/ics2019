@@ -50,3 +50,6 @@ make_EHelper(imul3);
 make_EHelper(div);
 make_EHelper(idiv);
 make_EHelper(cltd);
+
+make_EHelper(in);
+make_EHelper(out);
