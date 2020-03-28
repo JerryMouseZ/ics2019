@@ -48,8 +48,7 @@ enum
 
 typedef struct
 {
-  union
-  {
+  union {
     /* data */
     union {
       uint32_t _32;
@@ -70,16 +69,16 @@ typedef struct
   union {
     struct
     {
-      int CF : 1;
-      int x1 : 5;
-      int ZF : 1;
-      int SF : 1;
-      int x2 : 1;
-      int IF : 1;
-      int x3 : 1;
-      int OF : 1;
-      int x4 : 4;
-      int x5 : 16;
+      uint32_t CF : 1;
+      uint32_t x1 : 5;
+      uint32_t ZF : 1;
+      uint32_t SF : 1;
+      uint32_t x2 : 1;
+      uint32_t IF : 1;
+      uint32_t x3 : 1;
+      uint32_t OF : 1;
+      uint32_t x4 : 4;
+      uint32_t x5 : 16;
     } eflags;
     rtlreg_t eflag;
   };

@@ -50,7 +50,7 @@ make_EHelper(ret)
 
 make_EHelper(ret_imm)
 {
-  TODO();
+  // TODO();
 
   print_asm("ret %s", id_dest->str);
 }
