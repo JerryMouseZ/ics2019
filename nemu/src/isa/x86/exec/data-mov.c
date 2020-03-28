@@ -182,9 +182,7 @@ make_EHelper(cwtl)
 make_EHelper(movsx)
 {
   //符号拓展之后写入id_dest
-  printf("val:%x\n", id_src->val);
   rtl_sext(&s0, &id_src->val, id_src->width);
-  printf("sext:%x\n", s0);
   id_dest->width = 4;
   operand_write(id_dest, &s0);
   print_asm_template2(movsx);
