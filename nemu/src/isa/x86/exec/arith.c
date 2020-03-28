@@ -154,10 +154,12 @@ make_EHelper(sbb)
   rtl_sub(&s0, &id_dest->val, &id_src->val);
   // s1 = s0 - CF
   rtl_get_CF(&s1);
+  //CF错了
   rtl_sub(&s1, &s0, &s1);
 
   operand_write(id_dest, &s1);
 
+  printf("width:%d\n", id_dest->width);
   if (id_dest->width != 4)
   {
     rtl_andi(&s1, &s1, 0xffffffffu >> ((4 - id_dest->width) * 8));

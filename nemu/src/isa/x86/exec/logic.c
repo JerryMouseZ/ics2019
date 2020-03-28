@@ -5,20 +5,9 @@ make_EHelper(test)
 {
   // TODO();//比较但不修改寄存器，仅修改标志位
   rtl_and(&t0, &id_dest->val, &id_src->val);
-  rtl_msb(&s0, &t0, decinfo.width);
-  rtl_set_SF(&s0);
-  uint32_t dd = 1;
-  if (s0 == 0)
-  {
-    rtl_set_ZF(&dd);
-  }
-  else
-  {
-    dd = 0;
-    rtl_set_ZF(&dd);
-  }
+  rtl_update_ZFSF(&t0, id_dest->width);
   //CF OF 0
-  dd = 0;
+  uint32_t dd = 0;
   rtl_set_CF(&dd);
   rtl_set_OF(&dd);
   print_asm_template2(test);
