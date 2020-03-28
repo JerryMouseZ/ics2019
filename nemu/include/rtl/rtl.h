@@ -173,17 +173,20 @@ static inline void rtl_sext(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
   // TODO();
-  bool sign = (*src1 >> (8 * width - 1)) & 1;
-  if (sign)
+  rtlreg_t tmp = (*src1) & (~0u >> ((4 - width) << 3));
+  switch (width)
   {
-    t0 = 0xffffffff;
-    t0 = (t0 >> (8 * width - 1)) << (8 * width - 1);
-    s0 = *src1 | t0;
-    *dest = s0;
-  }
-  else
-  {
-    *dest = *src1;
+  case 4:
+    *dest = (uint32_t)tmp;
+    break;
+  case 1:
+    *dest = (uint32_t)(int8_t)tmp;
+    break;
+  case 2:
+    *dest = (uint32_t)(int16_t)tmp;
+    break;
+  default:
+    assert(0);
   }
 }
 
@@ -198,7 +201,7 @@ static inline void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
   // dest <- src1[width * 8 - 1]
   //TODO();
-  *dest = *src1 & (64 * width * width - 1);
+  *dest = (*src1 >> (width * 8 - 1)) & 1;
 }
 
 static inline void rtl_mux(rtlreg_t *dest, const rtlreg_t *cond, const rtlreg_t *src1, const rtlreg_t *src2)

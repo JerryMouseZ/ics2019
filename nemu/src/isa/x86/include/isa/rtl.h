@@ -64,20 +64,34 @@ static inline void rtl_is_sub_overflow(rtlreg_t *dest,
 {
   // dest <- is_overflow(src1 - src2)
   //同号相减不会溢出，正数减负数或者负数减正数
-  if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
+  // if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
+  // {
+  //   *dest = 0;
+  // }
+  // else if (*src1 >> (width * 8 - 1) || *src2 >> (width * 8 - 1))
+  // {
+  //   if (((*src1 >> (width * 8 - 1)) & 1) ^ (*res >> (width * 8 - 1)))
+  //   {
+  //     *dest = 1;
+  //   }
+  //   else
+  //   {
+  //     *dest = 0;
+  //   }
+  // }
+  // else
+  // {
+  //   *dest = 0;
+  // }
+  t0 = (*src1 >> (width * 8 - 1)) == 1 ? 0 : 1;
+  t1 = (*src2 >> (width * 8 - 1)) == 1 ? 0 : 1;
+  s0 = (*res >> (width * 8 - 1)) == 1 ? 0 : 1;
+  if (t0 ^ t1)
   {
-    *dest = 0;
-  }
-  else if (*src1 >> (width * 8 - 1) || *src2 >> (width * 8 - 1))
-  {
-    if (((*src1 >> (width * 8 - 1)) & 1) ^ (*res >> (width * 8 - 1)))
-    {
+    if (t0 ^ s0)
       *dest = 1;
-    }
     else
-    {
       *dest = 0;
-    }
   }
   else
   {
@@ -92,9 +106,7 @@ static inline void rtl_is_sub_carry(rtlreg_t *dest,
   if (*res > *src1)
     *dest = 1;
   else
-  {
     *dest = 0;
-  }
 }
 
 static inline void rtl_is_add_overflow(rtlreg_t *dest,
@@ -104,30 +116,44 @@ static inline void rtl_is_add_overflow(rtlreg_t *dest,
   // dest <- is_overflow(src1 + src2)
   //两个负数相加，结果变成正数或者两个整数相加，结果变成负数
   //　这里就当width为４吧
-  //
-  if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
-  {
-    //两个操作数是负数，结果要变成正数
-    if (!(*res >> (width * 8 - 1)))
-      *dest = 1;
-    else
-    {
-      *dest = 0;
-    }
-  }
-  else if (!(*src1 >> (width * 8 - 1)) && !(*src2 >> (width * 8 - 1)))
-  {
-    if (*res >> (width * 8 - 1))
-      *dest = 1;
-    else
-    {
-      *dest = 0;
-    }
-  }
-  else
+  t0 = (*src1 >> (width * 8 - 1)) == 1 ? 0 : 1;
+  t1 = (*src2 >> (width * 8 - 1)) == 1 ? 0 : 1;
+  s0 = (*res >> (width * 8 - 1)) == 1 ? 0 : 1;
+  if (t0 ^ t1)
   {
     *dest = 0;
   }
+  else
+  {
+    if (t0 ^ s0)
+      *dest = 1;
+    else
+      *dest = 0;
+  }
+
+  // if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
+  // {
+  //   //两个操作数是负数，结果要变成正数
+  //   if (!(*res >> (width * 8 - 1)))
+  //     *dest = 1;
+  //   else
+  //   {
+  //     *dest = 0;
+  //   }
+  // }
+  // else if (!(*src1 >> (width * 8 - 1)) && !(*src2 >> (width * 8 - 1)))
+  // {
+  //   if (*res >> (width * 8 - 1))
+  //     *dest = 1;
+  //   else
+  //   {
+  //     *dest = 0;
+  //   }
+  // }
+  // else
+  // {
+  //   *dest = 0;
+  // }
 }
 
 static inline void rtl_is_add_carry(rtlreg_t *dest,
@@ -135,23 +161,19 @@ static inline void rtl_is_add_carry(rtlreg_t *dest,
 {
   // dest <- is_carry(src1 + src2)
   if (*res < *src1)
-  {
     *dest = 1;
-  }
   else
-  {
     *dest = 0;
-  }
 }
 
 #define make_rtl_setget_eflags(f)                             \
   static inline void concat(rtl_set_, f)(const rtlreg_t *src) \
   {                                                           \
-    cpu.eflags.f = *src;                                      \
+    cpu.eflags.f = (*src & 1);                                \
   }                                                           \
   static inline void concat(rtl_get_, f)(rtlreg_t * dest)     \
   {                                                           \
-    *dest = cpu.eflags.f;                                     \
+    *dest = (cpu.eflags.f & 1);                               \
   }
 
 make_rtl_setget_eflags(CF)
