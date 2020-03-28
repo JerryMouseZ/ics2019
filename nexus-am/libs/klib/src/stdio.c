@@ -5,7 +5,18 @@
 
 int printf(const char *fmt, ...)
 {
-  return 0;
+  char buf[1024] = {0};
+  va_list ap;
+  va_start(ap, fmt);
+  int n = vsprintf(buf, fmt, ap);
+  va_end(ap);
+  int i = 0;
+  while (buf[i] != 0)
+  {
+    _putc(buf[i]);
+    i++;
+  }
+  return n;
 }
 
 char mm[] = "0123456789abcdef";
