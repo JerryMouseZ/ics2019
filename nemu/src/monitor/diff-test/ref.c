@@ -11,15 +11,12 @@ void difftest_memcpy_from_dut(paddr_t dest, void *src, size_t n)
 
 void difftest_getregs(void *r)
 {
-  printf("checkpoint\n");
   memcpy(r, &cpu, DIFFTEST_REG_SIZE);
-  printf("eflag: %x\n", ((CPU_state *)r)->eflag);
 }
 
 void difftest_setregs(const void *r)
 {
   memcpy(&cpu, r, DIFFTEST_REG_SIZE);
-  printf("eflag: %x\n", ((CPU_state *)r)->eflag);
 }
 
 void difftest_exec(uint64_t n)
