@@ -116,6 +116,9 @@ static inline void rtl_is_add_overflow(rtlreg_t *dest,
   // dest <- is_overflow(src1 + src2)
   //两个负数相加，结果变成正数或者两个整数相加，结果变成负数
   //　这里就当width为４吧
+  // rtl_msb(&t0, src1, width);
+  // rtl_msb(&t1, src2, width);
+  // rtl_msb(&s0, res, width);
   t0 = (*src1 >> (width * 8 - 1)) == 1 ? 0 : 1;
   t1 = (*src2 >> (width * 8 - 1)) == 1 ? 0 : 1;
   s0 = (*res >> (width * 8 - 1)) == 1 ? 0 : 1;
@@ -130,30 +133,6 @@ static inline void rtl_is_add_overflow(rtlreg_t *dest,
     else
       *dest = 0;
   }
-
-  // if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
-  // {
-  //   //两个操作数是负数，结果要变成正数
-  //   if (!(*res >> (width * 8 - 1)))
-  //     *dest = 1;
-  //   else
-  //   {
-  //     *dest = 0;
-  //   }
-  // }
-  // else if (!(*src1 >> (width * 8 - 1)) && !(*src2 >> (width * 8 - 1)))
-  // {
-  //   if (*res >> (width * 8 - 1))
-  //     *dest = 1;
-  //   else
-  //   {
-  //     *dest = 0;
-  //   }
-  // }
-  // else
-  // {
-  //   *dest = 0;
-  // }
 }
 
 static inline void rtl_is_add_carry(rtlreg_t *dest,

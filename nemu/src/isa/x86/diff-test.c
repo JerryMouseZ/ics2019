@@ -17,13 +17,29 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc)
     return false;
   }
   //对eflag的check需要变化一下
-  // if (cpu.eflags.CF != ref_r->eflags.CF || cpu.eflags.OF != ref_r->eflags.OF ||
-  //     cpu.eflags.SF != ref_r->eflags.SF || cpu.eflags.ZF != ref_r->eflags.ZF)
+  bool flag = true;
+  // if (cpu.eflags.CF != ref_r->eflags.CF)
   // {
-  //   printf("different at eflag\n");
-  //   return false;
+  //   printf("different at CF\n");
+  //   flag = false;
   // }
-  return true;
+  // if (cpu.eflags.OF != ref_r->eflags.OF)
+  // {
+  //   printf("different at OF\n");
+  //   flag = false;
+  // }
+  // if (cpu.eflags.SF != ref_r->eflags.SF)
+  // {
+  //   printf("different at SF\n");
+  //   flag = false;
+  // }
+  // if (cpu.eflags.ZF != ref_r->eflags.ZF)
+  // {
+  //   printf("different at ZF\n");
+  //   flag = false;
+  // }
+
+  return flag;
 }
 
 void isa_difftest_attach(void)

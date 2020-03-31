@@ -81,7 +81,6 @@ typedef struct Value
 } Value;
 
 static Token tokens[32] __attribute__((used)) = {};
-static int priority = 0;
 static int values[32] = {0};
 static int ops[32] = {0};
 static int values_top = -1;

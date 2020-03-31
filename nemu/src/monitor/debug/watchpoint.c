@@ -42,7 +42,7 @@ void free_wp(WP *wp)
   if (!wp->isuse)
   {
     printf("error free number\n");
-    return 0;
+    return;
   }
   WP *temp = head;
   if (temp == wp)
