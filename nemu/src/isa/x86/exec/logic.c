@@ -29,7 +29,7 @@ make_EHelper(and)
   print_asm_template2(and);
 }
 
-make_EHelper (xor)
+make_EHelper(xor)
 {
   // TODO();
   t0 = id_dest->val;
@@ -40,7 +40,7 @@ make_EHelper (xor)
   uint32_t dd = 0;
   rtl_set_CF(&dd);
   rtl_set_OF(&dd);
-  print_asm_template2 (xor);
+  print_asm_template2(xor);
 }
 
 make_EHelper(or)
@@ -103,4 +103,34 @@ make_EHelper(not)
   rtl_not(&s0, &id_dest->val);
   operand_write(id_dest, &s0);
   print_asm_template1(not);
+}
+
+make_EHelper(rol)
+{
+  switch (id_dest->width)
+  {
+  case 1:
+    rtl_li(&s0, 0x80);
+    break;
+  case 2:
+    rtl_li(&s0, 0x8000);
+    break;
+  case 4:
+    rtl_li(&s0, 0x80000000);
+    break;
+  default:
+    panic("Not supported width");
+  }
+  while (id_src->val > 0)
+  {
+    rtl_li(&s1, (s0 & id_dest->val) ? 1 : 0);
+    rtl_shli(&id_dest->val, &id_dest->val, 1);
+    rtl_add(&id_dest->val, &id_dest->val, &s1);
+    rtl_subi(&id_src->val, &id_src->val, 1);
+  }
+  // write the answer back
+  operand_write(id_dest, &id_dest->val);
+
+  // // update ZF, SF
+  // rtl_update_ZFSF(&id_dest->val, id_dest->width);
 }
