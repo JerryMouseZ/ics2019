@@ -64,25 +64,12 @@ static inline void rtl_is_sub_overflow(rtlreg_t *dest,
 {
   // dest <- is_overflow(src1 - src2)
   //同号相减不会溢出，正数减负数或者负数减正数
-  // if (*src1 >> (width * 8 - 1) && *src2 >> (width * 8 - 1))
-  // {
-  //   *dest = 0;
-  // }
-  // else if (*src1 >> (width * 8 - 1) || *src2 >> (width * 8 - 1))
-  // {
-  //   if (((*src1 >> (width * 8 - 1)) & 1) ^ (*res >> (width * 8 - 1)))
-  //   {
-  //     *dest = 1;
-  //   }
-  //   else
-  //   {
-  //     *dest = 0;
-  //   }
-  // }
-  // else
-  // {
-  //   *dest = 0;
-  // }
+  //排除例外，0 - 最大的负数
+  if(*src1 == 0 && *src2 == 0x80000000)
+  {
+    *dest = 1;
+    return;
+  }
   t0 = (*src1 >> (width * 8 - 1)) == 1 ? 0 : 1;
   t1 = (*src2 >> (width * 8 - 1)) == 1 ? 0 : 1;
   s0 = (*res >> (width * 8 - 1)) == 1 ? 0 : 1;

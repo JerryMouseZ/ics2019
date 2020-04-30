@@ -51,18 +51,19 @@ make_EHelper(in)
   switch (id_src->width)
   {
   case 1:
-    t2 = pio_read_b(id_src->val);
+    s0 = pio_read_b(id_src->val);
     break;
   case 2:
-    t2 = pio_read_w(id_src->val);
+    s0 = pio_read_w(id_src->val);
     break;
   case 4:
-    t2 = pio_read_l(id_src->val);
+    s0 = pio_read_l(id_src->val);
     break;
   default:
     break;
   }
-  operand_write(id_dest, &t2);
+
+  operand_write(id_dest, &s0);
   print_asm_template2(in);
 
 #ifdef DIFF_TEST
@@ -72,6 +73,7 @@ make_EHelper(in)
 
 make_EHelper(out)
 {
+  printf("out addr:%x\n", id_dest->val);
   switch (id_src->width)
   {
   case 1:
