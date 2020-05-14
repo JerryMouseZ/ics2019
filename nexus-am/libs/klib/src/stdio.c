@@ -23,7 +23,7 @@ int printf(const char *fmt, ...)
 
 char mm[] = "0123456789abcdef";
 
-void numtoStr(char *out, int num, int base, int width, char padc)
+void numtoStr(char *out, unsigned long long num, int base, int width, char padc)
 {
   if (num >= base)
   {
@@ -47,7 +47,7 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 {
   register const char *p;
   register int ch;
-  unsigned long long num;
+  long long num;
   int base, lflag, width, precision, altflag;
   char padc;
   //str len
@@ -179,7 +179,7 @@ int vsprintf(char *out, const char *fmt, va_list ap)
     case 'p':
       out[len++] = '0';
       out[len++] = 'x';
-      num = (unsigned long long)va_arg(ap, void *);
+      num = va_arg(ap, unsigned long);
       base = 16;
       goto number;
 

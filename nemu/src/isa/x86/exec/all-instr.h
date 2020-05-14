@@ -18,7 +18,7 @@ make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(sub);
 make_EHelper(add);
-make_EHelper (xor);
+make_EHelper(xor);
 make_EHelper(or);
 make_EHelper(adc);
 make_EHelper(sbb);
@@ -55,3 +55,4 @@ make_EHelper(cltd);
 
 make_EHelper(in);
 make_EHelper(out);
+make_EHelper(lidt);

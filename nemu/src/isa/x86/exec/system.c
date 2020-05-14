@@ -2,8 +2,18 @@
 
 make_EHelper(lidt)
 {
-  TODO();
-
+  rtl_lm(&s0, &id_dest->addr, 2);
+  IDTR(limit) = (unsigned short)s0 & 0xffff;
+  rtl_addi(&id_dest->addr, &id_dest->addr, 2);
+  rtl_lm(&s0, &id_dest->addr, 4);
+  if (decinfo.isa.is_operand_size_16)
+  {
+    IDTR(base) = (0xffffff & s0);
+  }
+  else
+  {
+    IDTR(base) = s0;
+  }
   print_asm_template1(lidt);
 }
 
