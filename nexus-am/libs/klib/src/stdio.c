@@ -3,17 +3,19 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+char buffer[10240] = {0};
+
 int printf(const char *fmt, ...)
 {
-  char buf[1024] = {0};
+  memset(buffer, 0, 10240);
   va_list ap;
   va_start(ap, fmt);
-  int n = vsprintf(buf, fmt, ap);
+  int n = vsprintf(buffer, fmt, ap);
   va_end(ap);
   int i = 0;
-  while (buf[i] != 0)
+  while (buffer[i] != 0)
   {
-    _putc(buf[i]);
+    _putc(buffer[i]);
     i++;
   }
   return n;
