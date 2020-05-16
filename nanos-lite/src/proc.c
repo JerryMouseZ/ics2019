@@ -6,28 +6,35 @@ static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
 
-void switch_boot_pcb() {
+void switch_boot_pcb()
+{
   current = &pcb_boot;
 }
 
-void hello_fun(void *arg) {
+void hello_fun(void *arg)
+{
   int j = 1;
-  while (1) {
+  while (1)
+  {
     Log("Hello World from Nanos-lite for the %dth time!", j);
-    j ++;
+    j++;
     _yield();
   }
 }
 
-void init_proc() {
+void naive_uload(PCB *pcb, const char *filename);
+
+void init_proc()
+{
   switch_boot_pcb();
 
   Log("Initializing processes...");
 
   // load program here
-
+  naive_uload(NULL, NULL);
 }
 
-_Context* schedule(_Context *prev) {
+_Context *schedule(_Context *prev)
+{
   return NULL;
 }
