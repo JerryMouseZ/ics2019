@@ -29,7 +29,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     if (pHeaders[i].p_type != PT_LOAD)
       continue;
     //将该段读取到制定的内存位置
-    ramdisk_read(pHeaders[i].p_vaddr, pHeaders[i].p_offset, pHeaders[i].p_filesz);
+    ramdisk_read((void*)pHeaders[i].p_vaddr, pHeaders[i].p_offset, pHeaders[i].p_filesz);
     Log("load size %d", pHeaders[i].p_filesz);
     //如果出现没对齐的情况把相应的内存区域清0
     if (pHeaders[i].p_filesz < pHeaders[i].p_memsz)
