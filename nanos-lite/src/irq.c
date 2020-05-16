@@ -3,21 +3,21 @@
 _Context *do_syscall(_Context *c);
 static _Context *do_event(_Event e, _Context *c)
 {
-  _Context *result = NULL;
   switch (e.event)
   {
   case _EVENT_YIELD:
     printf("yield event\n");
     break;
   case _EVENT_SYSCALL:
-    printf("event syscall\n");
-    result = do_syscall(c);
+    Log("syscall");
+    do_syscall(c);
+    Log("syscall done");
     break;
   default:
     panic("Unhandled event ID = %d", e.event);
   }
 
-  return result;
+  return NULL;
 }
 
 void init_irq(void)
