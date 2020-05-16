@@ -39,14 +39,17 @@ make_EHelper(int)
 {
   raise_intr(id_dest->val, *pc);
   print_asm("int %s", id_dest->str);
-
   difftest_skip_dut(1, 2);
 }
 
 make_EHelper(iret)
 {
-  TODO();
-
+  // TODO();
+  //中断返回
+  rtl_pop(&s0);
+  rtl_j(s0);
+  rtl_pop(&cpu.cs);
+  rtl_pop(&cpu.eflag);
   print_asm("iret");
 }
 

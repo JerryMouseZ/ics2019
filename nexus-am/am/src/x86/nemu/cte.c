@@ -22,12 +22,15 @@ void print_context(_Context *c)
 _Context *__am_irq_handle(_Context *c)
 {
   _Context *next = c;
-  print_context(c);
+  // print_context(c);
   if (user_handler)
   {
     _Event ev = {0};
     switch (c->irq)
     {
+    case 0x81:
+      ev.event = _EVENT_YIELD;
+      break;
     default:
       ev.event = _EVENT_ERROR;
       break;
