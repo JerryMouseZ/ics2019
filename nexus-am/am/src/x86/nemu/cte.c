@@ -40,6 +40,7 @@ _Context *__am_irq_handle(_Context *c)
     }
 
     next = user_handler(ev, c);
+    assert(next == 0);
     if (next == NULL)
     {
       next = c;
