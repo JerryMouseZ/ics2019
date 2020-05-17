@@ -31,7 +31,8 @@ void init_proc()
   Log("Initializing processes...");
 
   // load program here
-  naive_uload(NULL, NULL);
+  Log("load text program");
+  naive_uload(NULL, "/bin/text");
 }
 
 _Context *schedule(_Context *prev)
