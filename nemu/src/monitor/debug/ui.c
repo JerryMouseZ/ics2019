@@ -91,7 +91,7 @@ static int cmd_p(char *args)
   uint32_t result = expr(args, &success);
   if (success)
   {
-    printf("the result is %u\n", result);
+    printf("the result is %x\n", result);
     return 0;
   }
   return -1;

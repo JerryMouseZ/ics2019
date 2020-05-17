@@ -68,7 +68,7 @@ make_EHelper(popa)
   {
     uint32_t temp = 0;
     uint32_t va = 0;
-    for (int i = R_AX; i <= R_DI; i++)
+    for (int i = R_DI; i >= R_AX; i--)
     {
       if (i != R_SP)
       {
@@ -84,7 +84,7 @@ make_EHelper(popa)
   else
   {
     uint32_t temp = 0;
-    for (int i = R_EAX; i <= R_EDI; i++)
+    for (int i = R_EDI; i >= R_EAX; i--)
     {
       if (i != R_ESP)
         rtl_pop(&reg_l(i));

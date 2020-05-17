@@ -12,15 +12,6 @@
 /* restrict the size of log file */
 #define LOG_MAX (1024 * 1024)
 
-static bool deadFlag = false;
-
-int hashTable[1024] = {0};
-
-int regsTable[1024][8] = {0};
-
-bool checkDeadLoop();
-void deadLoopUpdate();
-
 NEMUState nemu_state = {.state = NEMU_STOP};
 
 void interpret_rtl_exit(int state, vaddr_t halt_pc, uint32_t halt_ret)
@@ -83,33 +74,8 @@ void cpu_exec(uint64_t n)
         if (check_wp())
             nemu_state.state = NEMU_STOP;
 #endif
-
         g_nr_guest_instr++;
-#ifdef DEADLOOP
-        if (g_nr_guest_instr == 1024)
-        {
-            deadFlag = true;
-        }
-        if (deadFlag)
-        {
-            hashTable[cpu.pc % 1024]++;
-            if (hashTable[cpu.pc % 1024] > 10000)
-            {
-                nemu_state.state = NEMU_ABORT;
-                fprintf(stderr, "dead loop detected!\n");
-            }
-            // if (hashTable[cpu.pc % 1024] == cpu.pc)
-            // {
-            //     if (checkDeadLoop())
-            //     {
-            //         nemu_state.state = NEMU_ABORT;
-            //         fprintf(stderr, "dead loop detected!\n");
-            //     }
-            // }
-            // hashTable[cpu.pc % 1024] = cpu.pc;
-            // deadLoopUpdate();
-        }
-#endif
+
 #ifdef HAS_IOE
         extern void device_update();
         device_update();
@@ -131,35 +97,5 @@ void cpu_exec(uint64_t n)
              (nemu_state.state == NEMU_ABORT ? "\33[1;31mABORT" : (nemu_state.halt_ret == 0 ? "\33[1;32mHIT GOOD TRAP" : "\33[1;31mHIT BAD TRAP")),
              nemu_state.halt_pc);
         monitor_statistic();
-    }
-}
-
-bool checkDeadLoop()
-{
-    int count = 0;
-    int dd = 0;
-    for (int i = R_EAX; i <= R_EDI; i++)
-    {
-        if (reg_l(i) == regsTable[cpu.pc % 1024][i])
-        {
-            if (regsTable[cpu.pc % 1024][i] == 0)
-            {
-                dd++;
-            }
-            count++;
-        }
-    }
-    if (count >= 7)
-    {
-        return true;
-    }
-    return false;
-}
-
-void deadLoopUpdate()
-{
-    for (int i = R_EAX; i <= R_EDI; i++)
-    {
-        regsTable[cpu.pc % 1024][i] = reg_l(i);
     }
 }
