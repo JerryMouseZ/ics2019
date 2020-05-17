@@ -1,6 +1,8 @@
 #include "syscall.h"
 #include "common.h"
 
+void *_brk(const void *addr);
+
 _Context *do_syscall(_Context *c)
 {
   uintptr_t a[4];
@@ -33,11 +35,17 @@ _Context *do_syscall(_Context *c)
     c->GPRx = 0;
     break;
   case SYS_brk:
-    c->GPRx = (uintptr_t)(int *)_sbrk((void *)a[1]);
+    c->GPRx = (uintptr_t)(int *)_brk((void *)a[1]);
+    // c->GPRx = (uintptr_t)(int *)_sbrk((void *)a[1]);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
   }
 
   return NULL;
+}
+
+void *_brk(const void *addr)
+{
+  return 0;
 }
