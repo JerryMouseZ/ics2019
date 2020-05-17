@@ -1,204 +1,104 @@
 #include "cpu/exec.h"
 
-make_EHelper(mov)
-{
+make_EHelper(mov) {
   operand_write(id_dest, &id_src->val);
   print_asm_template2(mov);
 }
 
-make_EHelper(push)
-{
-  // TODO();
-  rtl_push(&decinfo.dest.val);
+make_EHelper(push) {
+  rtl_push(&id_dest->val);
+  // Log("0x%x addr: 0x%x v: 0x%x", cpu.pc, cpu.esp, id_dest->val);
   print_asm_template1(push);
 }
 
-make_EHelper(pop)
-{
-  // TODO();
+make_EHelper(pop) {
+  rtl_pop(&id_dest->val);
 
-  rtl_pop(&decinfo.dest.val);
-  operand_write(id_dest, &decinfo.dest.val);
+  // store data to the reg
+  rtl_sr(id_dest->reg, &id_dest->val, 4);
   print_asm_template1(pop);
 }
 
-//60
-make_EHelper(pusha)
-{
-  // TODO(); //压入所有寄存器,不需要操作数
-  //16位的还是注意一下
-  if (decinfo.isa.is_operand_size_16)
-  {
-    uint32_t temp = (uint32_t)reg_w(R_SP);
-    uint32_t va = 0;
-    for (int i = R_AX; i <= R_DI; i++)
-    {
-      if (i != R_SP)
-      {
-        va = reg_w(i);
-        rtl_push(&va);
-      }
-      else
-      {
-        rtl_push(&temp);
-      }
-    }
-  }
-  else
-  {
-    uint32_t temp = cpu.esp;
-    for (int i = R_EAX; i <= R_EDI; i++)
-    {
-      if (i != R_ESP)
-        rtl_push(&reg_l(i));
-      else
-      {
-        rtl_push(&temp);
-      }
+make_EHelper(pusha) {
+  rtl_li(&s1, reg_l(R_ESP));
+  for (int i = R_EAX; i <= R_EDI; i++) {
+    if (i == R_ESP) {
+      rtl_push(&s1);
+    } else {
+      rtl_li(&s0, reg_l(i));
+      rtl_push(&s0);
     }
   }
   print_asm("pusha");
 }
 
-//61
-make_EHelper(popa)
-{
-  // TODO();//弹出所有寄存器
-  if (decinfo.isa.is_operand_size_16)
-  {
-    uint32_t temp = 0;
-    uint32_t va = 0;
-    for (int i = R_DI; i >= R_AX; i--)
-    {
-      if (i != R_SP)
-      {
-        rtl_pop(&va);
-        reg_w(i) = (uint16_t)va;
-      }
-      else
-      {
-        rtl_pop(&temp);
-      }
-    }
-  }
-  else
-  {
-    uint32_t temp = 0;
-    for (int i = R_EDI; i >= R_EAX; i--)
-    {
-      if (i != R_ESP)
-        rtl_pop(&reg_l(i));
-      else
-      {
-        rtl_pop(&temp);
-      }
-    }
+make_EHelper(popa) {
+  for (int i = R_EDI; i >= R_EAX; i--) {
+    rtl_pop(&s0);
+    if (i == R_ESP) continue; // throwaway
+    rtl_sr(i, &s0, 4);
   }
   print_asm("popa");
 }
 
-make_EHelper(leave)
-{
-  // TODO();
-  if (decinfo.isa.is_operand_size_16)
-  {
-    uint32_t va = 0;
-    reg_w(R_SP) = reg_w(R_BP);
-    rtl_pop(&va);
-    reg_w(R_BP) = (uint16_t)va;
-  }
-  else
-  {
-    reg_l(R_ESP) = reg_l(R_EBP);
-    rtl_pop(&reg_l(R_EBP));
-  }
-
+make_EHelper(leave) {
+  // set esp to ebp
+  cpu.esp = cpu.ebp;
+  // pop ebp
+  rtl_pop(&cpu.ebp);
   print_asm("leave");
 }
 
-//不懂这是啥
-make_EHelper(cltd)
-{
-  if (decinfo.isa.is_operand_size_16)
-  {
-    uint32_t dd = reg_w(R_AX);
-    rtl_sext(&dd, &dd, 2);
-    if ((int)dd < 0)
-    {
-      reg_w(R_DX) = 0xffff;
+make_EHelper(cltd) {
+  if (decinfo.isa.is_operand_size_16) {
+    if ((int16_t)reg_w(R_AX) < 0) {
+      rtl_li(&s0, 0xffff);
+    } else {
+      rtl_li(&s0, 0x0);
     }
-    else
-    {
-      reg_w(R_DX) = 0;
-    }
+    rtl_sr(R_DX, &s0, 2);
   }
-  else
-  {
-    int dd = reg_l(R_EAX);
-    if (dd < 0)
-    {
-      reg_l(R_EDX) = 0xffffffff;
+  else {
+    if ((int32_t)reg_l(R_EAX) < 0) {
+      rtl_li(&s0, 0xffffffff);
+    } else {
+      rtl_li(&s0, 0x0);
     }
-    else
-    {
-      reg_l(R_EDX) = 0;
-    }
+    rtl_sr(R_EDX, &s0, 4);
   }
 
   print_asm(decinfo.isa.is_operand_size_16 ? "cwtl" : "cltd");
 }
 
-make_EHelper(cwtl)
-{
-  if (decinfo.isa.is_operand_size_16)
-  {
-    uint32_t dd = reg_w(R_AX);
-    rtl_sext(&dd, &dd, 2);
-    if ((int)dd < 0)
-    {
-      reg_w(R_DX) = 0xffff;
-    }
-    else
-    {
-      reg_w(R_DX) = 0;
-    }
+make_EHelper(cwtl) {
+  if (decinfo.isa.is_operand_size_16) {
+    rtl_li(&s0, reg_b(R_AL));
+    rtl_sext(&s0, &s0, 1);
+    rtl_sr(R_AX, &s0, 2);
   }
-  else
-  {
-    int dd = reg_l(R_EAX);
-    if (dd < 0)
-    {
-      reg_l(R_EDX) = 0xffffffff;
-    }
-    else
-    {
-      reg_l(R_EDX) = 0;
-    }
+  else {
+    rtl_li(&s0, reg_b(R_AX));
+    rtl_sext(&s0, &s0, 2);
+    rtl_sr(R_EAX, &s0, 4);
   }
 
   print_asm(decinfo.isa.is_operand_size_16 ? "cbtw" : "cwtl");
 }
 
-make_EHelper(movsx)
-{
-  //符号拓展之后写入id_dest
+make_EHelper(movsx) {
+  id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
   rtl_sext(&s0, &id_src->val, id_src->width);
-  id_dest->width = 4;
   operand_write(id_dest, &s0);
   print_asm_template2(movsx);
 }
 
-make_EHelper(movzx)
-{
-  //0拓展
-  id_dest->width = 4;
+make_EHelper(movzx) {
+  id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
   operand_write(id_dest, &id_src->val);
   print_asm_template2(movzx);
 }
 
-make_EHelper(lea)
-{
-  // printf("esp : 0x%x\n", cpu.esp);
+make_EHelper(lea) {
   operand_write(id_dest, &id_src->addr);
   print_asm_template2(lea);
 }

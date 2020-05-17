@@ -65,13 +65,11 @@ int strncmp(const char *s1, const char *s2, size_t n)
   return memcmp(s1, s2, n);
 }
 
-void *memset(void *v, int c, size_t n)
-{
-  //这里要求n必须是４的倍数
-  size_t i = 0;
-  for (i = 0; i < n; i += 1)
-  {
-    ((char *)v)[i] = c;
+void* memset(void* v,int c,size_t n) {
+  assert(v != NULL);
+  uint8_t byte = (uint8_t) c;
+  for (int i = 0; i < n; i++) {
+    ((uint8_t*)v)[i] = byte;
   }
   return v;
 }

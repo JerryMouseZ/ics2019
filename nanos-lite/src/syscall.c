@@ -13,7 +13,19 @@ _Context *do_syscall(_Context *c)
   case SYS_exit:
     Log("id = 0 exit");
     _halt(a[1]);
-    c->GPRx = 1;
+    c->GPRx = 0;
+    break;
+  case SYS_write:
+    if (a[1] == 1 || a[1] == 2)
+    {
+      char *buf = (char *)a[2];
+      int len = (int)a[3];
+      for (int i = 0; i < len; i++)
+      {
+        _putc(buf[i]);
+      }
+      c->GPRx = len;
+    }
     break;
   case SYS_yield:
     // _yield();

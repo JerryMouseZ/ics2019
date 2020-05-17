@@ -3,6 +3,16 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+int _putstr(char *s)
+{
+  int i = 0;
+  while(s[i]){
+    _putc(s[i]);
+    i++;
+  }
+  return i;
+}
+
 char buffer[10240] = {0};
 
 int printf(const char *fmt, ...)
@@ -12,13 +22,14 @@ int printf(const char *fmt, ...)
   va_start(ap, fmt);
   int n = vsprintf(buffer, fmt, ap);
   va_end(ap);
-  int i = 0;
-  while (buffer[i] != 0)
-  {
-    _putc(buffer[i]);
-    i++;
-  }
-  return n;
+  return _putstr(buffer);
+  // int i = 0;
+  // while (buffer[i] != 0)
+  // {
+  //   _putc(buffer[i]);
+  //   i++;
+  // }
+  // return n;
 }
 
 char mm[] = "0123456789abcdef";
