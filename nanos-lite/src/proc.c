@@ -32,7 +32,7 @@ void init_proc()
 
   // load program here
   Log("load text program");
-  naive_uload(NULL, "/bin/pal");
+  naive_uload(NULL, "/bin/init");
 }
 
 _Context *schedule(_Context *prev)

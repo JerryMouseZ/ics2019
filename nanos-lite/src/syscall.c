@@ -19,8 +19,8 @@ _Context *do_syscall(_Context *c)
   switch (a[0])
   {
   case SYS_exit:
-    _halt(a[1]);
-    // c->GPRx = _execve("/bin/init", (char **const)a[2], (char **const)a[3]);
+    // _halt(a[1]);
+    c->GPRx = _execve("/bin/init", (char **const)a[2], (char **const)a[3]);
     c->GPRx = 0;
     break;
   case SYS_yield:
