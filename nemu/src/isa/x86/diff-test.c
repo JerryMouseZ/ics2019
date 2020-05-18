@@ -42,6 +42,15 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc)
   return flag;
 }
 
+#define ISA_DIFF_END1 0x7c00
+#define ISA_DIFF_ST2 0x1000000
+#define ISA_DIFF_END2 PMEM_SIZE
+
 void isa_difftest_attach(void)
 {
+  char *mainargs = guest_to_host(0);
+  ref_difftest_memcpy_from_dut(PC_START - IMAGE_START, mainargs, 0x7c00);
+  mainargs = (char *)ISA_DIFF_ST2;
+  ref_difftest_memcpy_from_dut(PC_START - IMAGE_START + ISA_DIFF_ST2, mainargs, ISA_DIFF_END2 - ISA_DIFF_ST2);
+  ref_difftest_setregs(&cpu);
 }

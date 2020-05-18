@@ -11,7 +11,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len);
 size_t fb_write(const void *buf, size_t offset, size_t len);
 size_t fbsync_write(const void *buf, size_t offset, size_t len);
 
-// extern int screen_width_, screen_height_;
+extern int screen_width_, screen_height_;
 
 typedef struct
 {
@@ -61,7 +61,7 @@ static Finfo file_table[] __attribute__((used)) = {
 void init_fs()
 {
   // TODO: initialize the size of /dev/fb
-  // file_table[4].size = screen_width_ * screen_height_ * sizeof(uint32_t);
+  file_table[4].size = screen_width_ * screen_height_ * sizeof(uint32_t);
   for (int i = 7; i < NR_FILES; i++)
   {
     file_table[i].open_offset = file_table[i].disk_offset;
