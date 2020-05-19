@@ -28,16 +28,13 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 {
   int fd = fs_open(filename, 0, 0);
   Log("fd : %d, filename : %s", fd, filename);
+  //读取文件头
   Elf_Ehdr elfHeader;
   size_t len = fs_read(fd, &elfHeader, sizeof(Elf_Ehdr));
-  // Log("read elfHeader");
-  // size_t len = ramdisk_read(&elfHeader, 0, sizeof(Elf_Ehdr));
   assert(len == sizeof(Elf_Ehdr));
   //读取段头
   fs_lseek(fd, elfHeader.e_phoff, SEEK_SET);
   fs_read(fd, pHeaders, elfHeader.e_phentsize * elfHeader.e_phnum);
-  // ramdisk_read(pHeaders, elfHeader.e_phoff, elfHeader.e_phentsize * elfHeader.e_phnum);
-  // Log("read pHeader");
   for (int i = 0; i < elfHeader.e_phnum; i++)
   {
     if (pHeaders[i].p_type != PT_LOAD)
@@ -45,8 +42,6 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     //将该段读取到制定的内存位置
     fs_lseek(fd, pHeaders[i].p_offset, SEEK_SET);
     fs_read(fd, (void *)pHeaders[i].p_vaddr, pHeaders[i].p_filesz);
-    // ramdisk_read((void *)pHeaders[i].p_vaddr, pHeaders[i].p_offset, pHeaders[i].p_filesz);
-    // Log("load size %d", pHeaders[i].p_filesz);
     //如果出现没对齐的情况把相应的内存区域清0
     if (pHeaders[i].p_filesz < pHeaders[i].p_memsz)
       memset((void *)(pHeaders[i].p_vaddr + pHeaders[i].p_filesz), 0, pHeaders[i].p_memsz - pHeaders[i].p_filesz);
