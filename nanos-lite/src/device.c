@@ -41,6 +41,7 @@ size_t events_read(void *buf, size_t offset, size_t len)
       return -1;
     ret = strlen(rec_buf);
     strcpy(buf, rec_buf);
+    return ret;
   }
 
   uint32_t microsec = uptime();
