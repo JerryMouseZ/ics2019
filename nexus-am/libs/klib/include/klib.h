@@ -38,6 +38,7 @@ extern "C"
   int read_key();
   void draw_rect(uint32_t *pixels, int x, int y, int w, int h);
   void draw_sync();
+  void get_rect(int *width, int *height);
   int screen_width();
   int screen_height();
 

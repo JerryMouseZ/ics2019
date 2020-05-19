@@ -62,6 +62,7 @@ void init_fs()
 {
   // TODO: initialize the size of /dev/fb
   file_table[4].size = screen_width_ * screen_height_ * sizeof(uint32_t);
+  Log("fb size : %d", file_table[4].size);
   for (int i = 7; i < NR_FILES; i++)
   {
     file_table[i].open_offset = file_table[i].disk_offset;

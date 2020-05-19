@@ -72,13 +72,33 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len)
 
 size_t fb_write(const void *buf, size_t offset, size_t len)
 {
-  offset /= sizeof(uint32_t);
-  int x = offset % screen_width_;
-
-  int y = offset / screen_width_;
-  int w = len / 4;
-  int h = 1;
-  draw_rect((uint32_t *)buf, x, y, w, h);
+  assert(offset % 4 == 0 && len % 4 == 0);
+  int index = offset / sizeof(uint32_t);
+  get_rect(&screen_width_, &screen_height_);
+  int x1 = index % screen_width_;
+  int y1 = index / screen_width_;
+  index = (offset + len) / 4;
+  draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
+  return len;
+  int y2 = index / screen_width_;
+  // printf("%d\n", y1 == y2);
+  assert(y2 >= y1);
+  if (y1 == y2)
+  {
+    draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
+    return;
+  }
+  int tempw = screen_width_ - x1; //第一行的像素
+  if (y2 - y1 == 1)
+  {
+    draw_rect((uint32_t *)buf, x1, y1, tempw, 1);
+    draw_rect((uint32_t *)buf + tempw, 0, y2, len / 4 - tempw, 1); //画第二行
+    return;
+  }
+  draw_rect((uint32_t *)buf, x1, y1, tempw, 1);
+  int h = y2 - y1 - 1;
+  draw_rect((uint32_t *)(buf + tempw * 4), 0, y1 + 1, screen_width_, h);
+  draw_rect((uint32_t *)(buf + tempw * 4 + screen_width_ * h * 4), 0, y2, len / 4 - tempw - screen_width_ * h, 1);
   return len;
 }
 
@@ -94,9 +114,6 @@ void init_device()
   _ioe_init();
   // TODO: print the string to array `dispinfo` with the format
   // described in the Navy-apps convention
-  screen_width_ = screen_width();
-  screen_height_ = screen_height();
-  sprintf(dispinfo, "WIDTH:%d\n", screen_width_);
-  sprintf(dispinfo + strlen(dispinfo), "HEIGHT:%d\n", screen_height_);
-  Log("%s", dispinfo);
+  get_rect(&screen_width_, &screen_height_);
+  sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d\n", screen_width_, screen_height_);
 }
