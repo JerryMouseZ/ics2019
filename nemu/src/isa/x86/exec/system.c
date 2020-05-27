@@ -47,6 +47,7 @@ make_EHelper(iret)
   // TODO();
   //中断返回
   rtl_pop(&s0);
+  // printf("nemu jmp to %x\n", s0);
   rtl_j(s0);
   rtl_pop(&cpu.cs);
   rtl_pop(&cpu.eflag);

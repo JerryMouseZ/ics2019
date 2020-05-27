@@ -40,13 +40,12 @@ _Context *__am_irq_handle(_Context *c)
     }
 
     next = user_handler(ev, c);
-    assert(next == 0);
     if (next == NULL)
     {
       next = c;
     }
+    // printf("switch to eip : %x\n", next->eip);
   }
-
   return next;
 }
 
@@ -69,9 +68,29 @@ int _cte_init(_Context *(*handler)(_Event, _Context *))
   return 0;
 }
 
+/*
++---------------+ <---- stack.end
+|               |
+|    context    |
+|               |
++---------------+ <--+
+|               |    |
+|               |    |
+|               |    |
+|               |    |
++---------------+    |
+|       cp      | ---+
++---------------+ <---- stack.start
+|               |
+*/
 _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg)
 {
-  return NULL;
+  _Context *c = (_Context *)(stack.end - sizeof(_Context));
+  memset(c, 0, sizeof(_Context));
+  c->cs = 8;
+  c->eflags = 2;
+  c->eip = (uintptr_t)entry;
+  return c;
 }
 
 void _yield()

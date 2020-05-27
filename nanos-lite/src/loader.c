@@ -61,7 +61,6 @@ void context_kload(PCB *pcb, void *entry)
   _Area stack;
   stack.start = pcb->stack;
   stack.end = stack.start + sizeof(pcb->stack);
-
   pcb->cp = _kcontext(stack, entry, NULL);
 }
 
@@ -74,4 +73,5 @@ void context_uload(PCB *pcb, const char *filename)
   stack.end = stack.start + sizeof(pcb->stack);
 
   pcb->cp = _ucontext(&pcb->as, stack, stack, (void *)entry, NULL);
+  printf("user eip : %x\n", pcb->cp->eip);
 }
