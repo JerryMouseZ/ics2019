@@ -73,6 +73,8 @@ static int cmd_info(char *args)
     printf("%s 0x%08x\n", "eip", cpu.pc);
     printf("%s 0x%08x\n", "eflags", cpu.eflag);
     printf("%s 0x%08x\n", "cs", cpu.cs);
+    printf("%s 0x%08x\n", "cr0", cpu.cr0);
+    printf("%s 0x%08x\n", "cr3", cpu.cr3);
     // for (int i = R_AX; i < R_DI; i++)
     // {
     //   printf("%s 0x%04x\n", reg_name(i, 2), reg_w(i));
