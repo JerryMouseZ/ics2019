@@ -1,4 +1,4 @@
-#include "mmu.h"
+#include "include/isa/mmu.h"
 #include "nemu.h"
 
 const uint32_t present = 1;
@@ -10,18 +10,18 @@ paddr_t page_translate(vaddr_t vaddr, bool iswrite)
     uint32_t offset1 = (vaddr >> 22), offset2 = (vaddr >> 12) & 0x3ff, offset3 = vaddr & 0x3ff;
     //pde
     PDE pde;
-    pde.val = paddr_read(cpu.cr3 & PAGE_MASK + offset1, 4);
+    pde.val = paddr_read((cpu.cr3 & PAGE_MASK) + offset1, 4);
     assert(pde.present);
     pde.accessed = 1;
     //pte
     PTE pte;
-    pte.val = paddr_read(pde.page_frame << 12 + offset2, 4);
+    pte.val = paddr_read((pde.page_frame << 12) + offset2, 4);
     assert(pte.present);
     pte.accessed = 1;
     if (iswrite)
       pte.dirty = 1;
 
-    uint32_t page_addr = pte.page_frame << 12 + offset3;
+    uint32_t page_addr = (pte.page_frame << 12) + offset3;
     return (paddr_t)page_addr;
   }
   else
