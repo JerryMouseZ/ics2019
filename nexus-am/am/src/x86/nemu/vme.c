@@ -45,11 +45,13 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
       }
     }
   }
-
+  printf("set crs\n");
   set_cr3(kpdirs);
+  printf("set cr0\n");
   set_cr0(get_cr0() | CR0_PG);
   vme_enable = 1;
-
+  printf("access vme_enable?\n");
+  printf("vme init\n");
   return 0;
 }
 
