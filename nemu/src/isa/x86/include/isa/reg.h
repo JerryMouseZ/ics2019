@@ -92,12 +92,23 @@ typedef struct
   union {
     struct
     {
-      uint32_t tags : 31;
+      uint32_t PE : 1;
+      uint32_t paddings : 30;
       uint32_t PG : 1;
     } CR0;
     rtlreg_t cr0;
   };
-  rtlreg_t cr3;
+  union {
+    struct
+    {
+      uint32_t paddings0 : 3;
+      uint32_t page_write_through : 1;
+      uint32_t page_cached_disable : 1;
+      uint32_t paddings1 : 7;
+      uint32_t page_directory_base : 20;
+    } CR3;
+    rtlreg_t cr3;
+  };
 } CPU_state;
 
 static inline int check_reg_index(int index)
