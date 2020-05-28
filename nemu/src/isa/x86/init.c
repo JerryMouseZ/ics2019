@@ -20,6 +20,7 @@ static void restart()
   // init EFLAGS
   cpu.eflag = 0x2;
   cpu.cs = 8;
+  cpu.cr0 = 0x60000011;
 }
 
 void init_isa(void)

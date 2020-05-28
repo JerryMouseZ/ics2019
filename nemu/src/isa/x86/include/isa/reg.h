@@ -82,13 +82,22 @@ typedef struct
     } eflags;
     rtlreg_t eflag;
   };
-	// add IDTR
+  // add IDTR
   rtlreg_t cs;
   struct IDTR_type
   {
     unsigned short limit;
-		rtlreg_t base;
+    rtlreg_t base;
   } IDTR;
+  union {
+    struct
+    {
+      uint32_t tags : 31;
+      uint32_t PG : 1;
+    } CR0;
+    rtlreg_t cr0;
+  };
+  rtlreg_t cr3;
 } CPU_state;
 
 static inline int check_reg_index(int index)
@@ -96,7 +105,6 @@ static inline int check_reg_index(int index)
   assert(index >= 0 && index < 8);
   return index;
 }
-
 
 #define CS (cpu.cs)
 #define IDTR(f) (cpu.IDTR.f)

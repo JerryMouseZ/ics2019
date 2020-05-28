@@ -29,7 +29,7 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
   }
 
   PTE *ptab = kptabs;
-  for (i = 0; i < NR_KSEG_MAP; i ++) {
+  for (i = 0; i < NR_KSEG_MAP; i ++) {//对段循环
     uint32_t pdir_idx = (uintptr_t)segments[i].start / (PGSIZE * NR_PTE);
     uint32_t pdir_idx_end = (uintptr_t)segments[i].end / (PGSIZE * NR_PTE);
     for (; pdir_idx < pdir_idx_end; pdir_idx ++) {
