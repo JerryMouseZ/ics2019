@@ -1,7 +1,7 @@
 #include "include/isa/mmu.h"
 #include "nemu.h"
 
-#define PAGE 0xfffffc00
+#define PAGE 0xfffff000
 
 const uint32_t present = 1;
 //translate肯定写错了
