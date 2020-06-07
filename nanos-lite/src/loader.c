@@ -46,13 +46,13 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     //将该段读取到制定的内存位置
     fs_lseek(fd, pHeaders[i].p_offset, SEEK_SET);
     pages = (pHeaders[i].p_memsz + PAGE_SIZE - 1) / PAGE_SIZE;
-    paddr = new_page(pages);
+    paddr = (uint32_t)new_page(pages);
     fs_read(fd, (void *)paddr, pHeaders[i].p_filesz);
     vaddr = pHeaders[i].p_vaddr;
     for (int j = 0; j < pages; j++)
     {
       //需要一页一页的映射
-      printf("[loader]pa:%x mapped on va:%x\n", paddr, vaddr);
+      // printf("[loader]pa:%x mapped on va:%x\n", paddr, vaddr);
       _map(&pcb->as, (void *)vaddr, (void *)paddr, _PROT_READ | _PROT_WRITE | _PROT_EXEC);
       vaddr += PAGE_SIZE;
       paddr += PAGE_SIZE;
@@ -62,6 +62,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
     if (pHeaders[i].p_filesz < pHeaders[i].p_memsz)
       memset((void *)(paddr + pHeaders[i].p_filesz), 0, pHeaders[i].p_memsz - pHeaders[i].p_filesz);
   }
+  pcb->max_brk = (uintptr_t)vaddr;
   return elfHeader.e_entry;
 }
 

@@ -5,7 +5,7 @@
 
 extern char _end;
 
-void *_brk(const void *addr);
+int mm_brk(uintptr_t new_brk);
 int _execve(const char *path, char *const argv[], char *const envp[]);
 
 _Context *do_syscall(_Context *c)
@@ -47,7 +47,7 @@ _Context *do_syscall(_Context *c)
     c->GPRx = fs_lseek(a[1], a[2], a[3]);
     break;
   case SYS_brk:
-    c->GPRx = (uintptr_t)(int *)_brk((void *)a[1]);
+    c->GPRx = mm_brk(a[1]);
     break;
   case SYS_fstat:
   case SYS_time:
@@ -67,11 +67,6 @@ _Context *do_syscall(_Context *c)
   return NULL;
 }
 
-
-void *_brk(const void *addr)
-{
-  return 0;
-}
 
 void naive_uload(PCB *pcb, const char *filename);
 

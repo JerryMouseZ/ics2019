@@ -129,7 +129,7 @@ int _map(_AddressSpace *as, void *va, void *pa, int prot)
 _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, void *args)
 {
   //_protect分配页目录表
-  printf("alloc pgdir : 0x%x\n", as->ptr);
+  // printf("alloc pgdir : 0x%x\n", as->ptr);
   _Context *c = (_Context *)(ustack.end - 4 * sizeof(uintptr_t) - sizeof(_Context));
   *(uintptr_t *)(ustack.end - 3 * sizeof(uintptr_t)) = args;
   memset(c, 0, sizeof(_Context));

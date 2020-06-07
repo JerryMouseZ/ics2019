@@ -3,7 +3,6 @@
 
 int main() {
   write(1, "Hello World!\n", 13);
-  write(2, "before printf\n", 14);
   int i = 2;
   volatile int j = 0;
   while (1) {
