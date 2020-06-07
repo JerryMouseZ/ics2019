@@ -7,6 +7,7 @@ void __am_irq0();
 void __am_vecsys();
 void __am_vectrap();
 void __am_vecnull();
+void __am_switch(_Context *c);
 
 void print_context(_Context *c)
 {
@@ -24,7 +25,9 @@ void __am_get_cur_as(_Context *c);
 _Context *__am_irq_handle(_Context *c)
 {
   _Context *next = c;
+  printf("current as :%x\n", c->as->ptr);
   __am_get_cur_as(c);
+  printf("current as :%x\n", c->as->ptr);
   // print_context(c);
   if (user_handler)
   {
@@ -49,6 +52,7 @@ _Context *__am_irq_handle(_Context *c)
     }
     // printf("switch to eip : %x\n", next->eip);
   }
+  printf("switch to new address: %x\n", next->as->ptr);
   __am_switch(next);
   return next;
 }

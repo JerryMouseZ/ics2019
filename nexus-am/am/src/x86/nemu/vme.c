@@ -71,7 +71,7 @@ int _protect(_AddressSpace *as)
 void _unprotect(_AddressSpace *as)
 {
   pgfree_usr(as->ptr);
-	as->ptr = as->area.start = as->area.end = NULL;
+  as->ptr = as->area.start = as->area.end = NULL;
 }
 
 static _AddressSpace *cur_as = NULL;
@@ -92,22 +92,19 @@ void __am_switch(_Context *c)
 int _map(_AddressSpace *as, void *va, void *pa, int prot)
 {
   //把pa映射到va的位置上
-  uint32_t pgdir = as->ptr;
-  //判断页目录项是否存在
-  uint32_t pde = pgdir + PDX(va) * 4;
-  //赋值pde
-  uint32_t pte = *(uint32_t *)pde;
-  if (!pte & PTE_P)
+  uint32_t *ptr = (uint32_t *)as->ptr;
+  uint32_t shift = (uintptr_t)va >> 22;
+  uintptr_t tr = ptr[shift];
+  if (tr == kpdirs[shift])
   {
-    //分配一个页用来存页表
-    pte = (uint32_t)pgalloc_usr(1);
-    memset((void *)pte, 0x1000, 0);
-    *(uint32_t *)pde = (uint32_t)pte | PTE_P;
+    PTE *uptable = (PTE *)(pgalloc_usr(1));
+    ptr[shift] = (uintptr_t)uptable | PTE_P;
   }
-  //赋值pte
-  *(uint32_t *)(pte + PTX(va) * 4) = PTE_ADDR(pa) | PTE_P;
+  tr = ptr[shift];
+  shift = (((uintptr_t)va) & 0x003ff000) >> 12;
+  uint32_t *pgr = (uint32_t *)(tr & 0xfffff000);
+  pgr[shift] = (uintptr_t)pa | PTE_P;
   return 0;
-
 }
 
 /*
@@ -131,13 +128,14 @@ int _map(_AddressSpace *as, void *va, void *pa, int prot)
 */
 _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, void *args)
 {
-  _protect(as);
+  //_protect分配页目录表
+  printf("alloc pgdir : 0x%x\n", as->ptr);
   _Context *c = (_Context *)(ustack.end - 4 * sizeof(uintptr_t) - sizeof(_Context));
   *(uintptr_t *)(ustack.end - 3 * sizeof(uintptr_t)) = args;
   memset(c, 0, sizeof(_Context));
   // printf("u addr : %x\n", entry);
-  c->eip = entry;
   c->as = as;
+  c->eip = entry;
   c->eflags = 2;
   c->cs = 8;
   return c;

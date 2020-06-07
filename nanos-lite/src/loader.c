@@ -37,16 +37,26 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   //读取段头
   fs_lseek(fd, elfHeader.e_phoff, SEEK_SET);
   fs_read(fd, pHeaders, elfHeader.e_phentsize * elfHeader.e_phnum);
-  uint32_t paddr;
+  uint32_t paddr, vaddr;
+  int pages = 0;
   for (int i = 0; i < elfHeader.e_phnum; i++)
   {
     if (pHeaders[i].p_type != PT_LOAD)
       continue;
     //将该段读取到制定的内存位置
     fs_lseek(fd, pHeaders[i].p_offset, SEEK_SET);
-    paddr = new_page(pHeaders[i].p_memsz / PAGE_SIZE);
+    pages = (pHeaders[i].p_memsz + PAGE_SIZE - 1) / PAGE_SIZE;
+    paddr = new_page(pages);
     fs_read(fd, (void *)paddr, pHeaders[i].p_filesz);
-    _map(&pcb->as, (void *)pHeaders[i].p_vaddr, (void *)paddr, _PROT_READ | _PROT_WRITE | _PROT_EXEC);
+    vaddr = pHeaders[i].p_vaddr;
+    for (int j = 0; j < pages; j++)
+    {
+      //需要一页一页的映射
+      printf("[loader]pa:%x mapped on va:%x\n", paddr, vaddr);
+      _map(&pcb->as, (void *)vaddr, (void *)paddr, _PROT_READ | _PROT_WRITE | _PROT_EXEC);
+      vaddr += PAGE_SIZE;
+      paddr += PAGE_SIZE;
+    }
     // fs_read(fd, (void *)pHeaders[i].p_vaddr, pHeaders[i].p_filesz);
     //如果出现没对齐的情况把相应的内存区域清0
     if (pHeaders[i].p_filesz < pHeaders[i].p_memsz)
@@ -72,12 +82,11 @@ void context_kload(PCB *pcb, void *entry)
 
 void context_uload(PCB *pcb, const char *filename)
 {
+  _protect(&pcb->as);
   uintptr_t entry = loader(pcb, filename);
-
   _Area stack;
   stack.start = pcb->stack;
   stack.end = stack.start + sizeof(pcb->stack);
-
   pcb->cp = _ucontext(&pcb->as, stack, stack, (void *)entry, NULL);
   // printf("user eip : %x\n", pcb->cp->eip);
 }
