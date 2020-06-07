@@ -19,9 +19,12 @@ void print_context(_Context *c)
   printf("--------------\n");
 }
 
+void __am_get_cur_as(_Context *c);
+
 _Context *__am_irq_handle(_Context *c)
 {
   _Context *next = c;
+  __am_get_cur_as(c);
   // print_context(c);
   if (user_handler)
   {
@@ -46,6 +49,7 @@ _Context *__am_irq_handle(_Context *c)
     }
     // printf("switch to eip : %x\n", next->eip);
   }
+  __am_switch(next);
   return next;
 }
 

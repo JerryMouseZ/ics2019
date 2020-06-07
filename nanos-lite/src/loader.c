@@ -24,6 +24,8 @@ size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
 
+#define PAGE_SIZE 0x1000
+
 static uintptr_t loader(PCB *pcb, const char *filename)
 {
   int fd = fs_open(filename, 0, 0);
@@ -35,16 +37,20 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   //读取段头
   fs_lseek(fd, elfHeader.e_phoff, SEEK_SET);
   fs_read(fd, pHeaders, elfHeader.e_phentsize * elfHeader.e_phnum);
+  uint32_t paddr;
   for (int i = 0; i < elfHeader.e_phnum; i++)
   {
     if (pHeaders[i].p_type != PT_LOAD)
       continue;
     //将该段读取到制定的内存位置
     fs_lseek(fd, pHeaders[i].p_offset, SEEK_SET);
-    fs_read(fd, (void *)pHeaders[i].p_vaddr, pHeaders[i].p_filesz);
+    paddr = new_page(pHeaders[i].p_memsz / PAGE_SIZE);
+    fs_read(fd, (void *)paddr, pHeaders[i].p_filesz);
+    _map(&pcb->as, (void *)pHeaders[i].p_vaddr, (void *)paddr, _PROT_READ | _PROT_WRITE | _PROT_EXEC);
+    // fs_read(fd, (void *)pHeaders[i].p_vaddr, pHeaders[i].p_filesz);
     //如果出现没对齐的情况把相应的内存区域清0
     if (pHeaders[i].p_filesz < pHeaders[i].p_memsz)
-      memset((void *)(pHeaders[i].p_vaddr + pHeaders[i].p_filesz), 0, pHeaders[i].p_memsz - pHeaders[i].p_filesz);
+      memset((void *)(paddr + pHeaders[i].p_filesz), 0, pHeaders[i].p_memsz - pHeaders[i].p_filesz);
   }
   return elfHeader.e_entry;
 }
