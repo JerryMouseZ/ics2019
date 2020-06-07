@@ -21,6 +21,7 @@ static void restart()
   cpu.eflag = 0x2;
   cpu.cs = 8;
   cpu.cr0 = 0x60000011;
+  cpu.INTR = false;
 }
 
 void init_isa(void)

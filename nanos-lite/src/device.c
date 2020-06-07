@@ -5,7 +5,6 @@ int screen_width_, screen_height_;
 
 size_t serial_write(const void *buf, size_t offset, size_t len)
 {
-  _yield();
   int ret = 0;
   char *str = (char *)buf;
   for (ret = 0; ret < len; ret++)
@@ -25,7 +24,6 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len)
 {
-  _yield();
   int ret = 0;
   static char rec_buf[1024] = {0};
   memset(rec_buf, 0, 1024);
@@ -75,7 +73,6 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len)
 
 size_t fb_write(const void *buf, size_t offset, size_t len)
 {
-  _yield();
   assert(offset % 4 == 0 && len % 4 == 0);
   int index = offset / sizeof(uint32_t);
   get_rect(&screen_width_, &screen_height_);

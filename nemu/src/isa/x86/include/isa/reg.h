@@ -109,6 +109,7 @@ typedef struct
     } CR3;
     rtlreg_t cr3;
   };
+  bool INTR;
 } CPU_state;
 
 static inline int check_reg_index(int index)

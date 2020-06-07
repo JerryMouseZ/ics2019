@@ -67,12 +67,13 @@ _Context *do_syscall(_Context *c)
   return NULL;
 }
 
-
 void naive_uload(PCB *pcb, const char *filename);
+void context_uload(PCB *pcb, const char *filename);
 
 int _execve(const char *path, char *const argv[], char *const envp[])
 {
-  Log("Execve, path = %s", path);
-  naive_uload(NULL, path);
+  //here shold replace with context_uload
+  // context_uload(&)
+  // naive_uload(NULL, path);
   return 0;
 }

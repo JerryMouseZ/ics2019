@@ -46,7 +46,7 @@ _Context *schedule(_Context *prev)
   current->cp = prev;
   current = &pcb[1];
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  // printf("switch to %x\n", current->as.ptr);
+  printf("switch to %x\n", current->as.ptr);
   // printf("schedule to eip : %x\n", current->cp->eip);
   return current->cp;
 }
