@@ -27,22 +27,25 @@ void context_uload(PCB *pcb, const char *filename);
 void context_kload(PCB *pcb, void *entry);
 void init_proc()
 {
-  pcb[0].priority = 1;
-  pcb[1].priority = 1000;
-  context_uload(&pcb[0], "/bin/hello");
+  memset(pcb, 0, sizeof(PCB) * MAX_NR_PROC);
+  context_uload(&pcb[0], "/bin/pal");
   context_uload(&pcb[1], "/bin/hello");
   switch_boot_pcb();
 }
 
+int counter = 0;
+
 _Context *schedule(_Context *prev)
 {
   current->cp = prev;
-  // current->counter++;
-  // if (current->counter > current->priority)
-  // {
-  //   current->counter = 0;
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  // printf("switch to %x\n", current->as.ptr);
-  // }
+  if (counter++ > 1000)
+  {
+    current = &pcb[1];
+    counter = 0;
+  }
+  else
+  {
+    current = &pcb[0];
+  }
   return current->cp;
 }
