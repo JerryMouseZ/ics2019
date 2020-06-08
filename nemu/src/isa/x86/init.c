@@ -22,6 +22,7 @@ static void restart()
   cpu.cs = 8;
   cpu.cr0 = 0x60000011;
   cpu.INTR = false;
+  Log("cpu started");
 }
 
 void init_isa(void)

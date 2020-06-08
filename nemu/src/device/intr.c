@@ -1,5 +1,7 @@
 #include "nemu.h"
 
-void dev_raise_intr() {
-    cpu.INTR = true;
+void dev_raise_intr()
+{
+    if (cpu.eflags.IF)
+        cpu.INTR = true;
 }
