@@ -5,6 +5,7 @@ int screen_width_, screen_height_;
 
 size_t serial_write(const void *buf, size_t offset, size_t len)
 {
+  _yield();
   int ret = 0;
   char *str = (char *)buf;
   for (ret = 0; ret < len; ret++)

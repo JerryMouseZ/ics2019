@@ -74,6 +74,7 @@ make_EHelper(iret)
   rtl_j(s0);
   rtl_pop(&cpu.cs);
   rtl_pop(&cpu.eflag);
+  cpu.eflags.IF = 1;
   print_asm("iret");
 }
 

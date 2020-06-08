@@ -37,7 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
   //读取段头
   fs_lseek(fd, elfHeader.e_phoff, SEEK_SET);
   fs_read(fd, pHeaders, elfHeader.e_phentsize * elfHeader.e_phnum);
-  uint32_t paddr, vaddr;
+  uint32_t paddr, vaddr=0x40000000;
   int pages = 0;
   for (int i = 0; i < elfHeader.e_phnum; i++)
   {

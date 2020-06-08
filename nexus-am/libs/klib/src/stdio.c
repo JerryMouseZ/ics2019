@@ -23,13 +23,6 @@ int printf(const char *fmt, ...)
   int n = vsprintf(buffer, fmt, ap);
   va_end(ap);
   return _putstr(buffer);
-  // int i = 0;
-  // while (buffer[i] != 0)
-  // {
-  //   _putc(buffer[i]);
-  //   i++;
-  // }
-  // return n;
 }
 
 char mm[] = "0123456789abcdef";

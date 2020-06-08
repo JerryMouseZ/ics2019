@@ -14,7 +14,7 @@ static _Context *do_event(_Event e, _Context *c)
     return do_syscall(c);
     break;
   case _EVENT_IRQ_TIMER:
-    Log("time event");
+    // Log("time event");
     _yield();
     break;
   default:

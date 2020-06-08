@@ -27,26 +27,22 @@ void context_uload(PCB *pcb, const char *filename);
 void context_kload(PCB *pcb, void *entry);
 void init_proc()
 {
-
-  // context_uload(&pcb[1], "/bin/init");
-  // context_kload(&pcb[0], (void *)hello_fun);
+  pcb[0].priority = 1;
+  pcb[1].priority = 1000;
   context_uload(&pcb[0], "/bin/hello");
-  // context_uload(&pcb[1], "/bin/pal");
-  // context_kload(&pcb[0], (void *)hello_fun);
+  context_uload(&pcb[1], "/bin/hello");
   switch_boot_pcb();
-
-  // Log("Initializing processes...");
-  // // load program here
-  // Log("load text program");
-  // naive_uload(NULL, "/bin/init");
 }
 
 _Context *schedule(_Context *prev)
 {
   current->cp = prev;
-  current = &pcb[0];
-  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  printf("switch to %x\n", current->as.ptr);
-  // printf("schedule to eip : %x\n", current->cp->eip);
+  // current->counter++;
+  // if (current->counter > current->priority)
+  // {
+  //   current->counter = 0;
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  // printf("switch to %x\n", current->as.ptr);
+  // }
   return current->cp;
 }

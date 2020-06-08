@@ -34,7 +34,7 @@ _Context *__am_irq_handle(_Context *c)
     _Event ev = {0};
     switch (c->irq)
     {
-    case 32:
+    case 0x20:
       ev.event = _EVENT_IRQ_TIMER;
       break;
     case 0x80:
