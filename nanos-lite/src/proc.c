@@ -38,7 +38,7 @@ int counter = 0;
 _Context *schedule(_Context *prev)
 {
   current->cp = prev;
-  if (counter++ > 1000)
+  if (counter++ > 100)
   {
     current = &pcb[1];
     counter = 0;
