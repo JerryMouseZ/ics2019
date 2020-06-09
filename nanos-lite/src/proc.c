@@ -28,7 +28,7 @@ void context_kload(PCB *pcb, void *entry);
 void init_proc()
 {
   memset(pcb, 0, sizeof(PCB) * MAX_NR_PROC);
-  context_uload(&pcb[0], "/bin/pal");
+  context_uload(&pcb[0], "/bin/init");
   context_uload(&pcb[1], "/bin/hello");
   switch_boot_pcb();
 }
