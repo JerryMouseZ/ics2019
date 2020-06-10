@@ -73,7 +73,6 @@ make_EHelper(in)
 
 make_EHelper(out)
 {
-  printf("out addr:%x\n", id_dest->val);
   switch (id_src->width)
   {
   case 1:
