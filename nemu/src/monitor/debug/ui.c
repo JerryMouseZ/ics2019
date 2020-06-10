@@ -71,6 +71,8 @@ static int cmd_info(char *args)
       printf("%s 0x%08x\n", reg_name(i, 4), cpu.gpr[i]._32);
     }
     printf("%s 0x%08x\n", "eip", cpu.pc);
+    printf("%s 0x%08x\n", "eflags", cpu.eflag);
+    printf("%s 0x%08x\n", "cs", cpu.cs);
     // for (int i = R_AX; i < R_DI; i++)
     // {
     //   printf("%s 0x%04x\n", reg_name(i, 2), reg_w(i));
@@ -89,7 +91,7 @@ static int cmd_p(char *args)
   uint32_t result = expr(args, &success);
   if (success)
   {
-    printf("the result is %u\n", result);
+    printf("the result is %x\n", result);
     return 0;
   }
   return -1;
@@ -134,6 +136,51 @@ static int cmd_d(char *args)
   del_wp(n);
   return 0;
 }
+
+void difftest_detach();
+void difftest_attach();
+static int cmd_attach(char *args)
+{
+  difftest_attach();
+  return 0;
+}
+
+static int cmd_detach(char *args)
+{
+  difftest_detach();
+  return 0;
+}
+
+void isa_reg_save(FILE *fp);
+
+static int cmd_save(char *path)
+{
+  //保存寄存器
+  FILE *fp = fopen(path, "w");
+  if (!fp)
+  {
+    printf("plese enter a valid path\n");
+    return 1;
+  }
+  isa_reg_save(fp);
+  fclose(fp);
+  return 0;
+}
+
+static int cmd_load(char *path)
+{
+  //加载寄存器
+  FILE *fp = fopen(path, "r");
+  if (!fp)
+  {
+    printf("plese enter a valid path\n");
+    return 1;
+  }
+  isa_reg_load(fp);
+  fclose(fp);
+  return 0;
+}
+
 static struct
 {
   char *name;
@@ -149,6 +196,8 @@ static struct
     {"x", "scan the memory and print the value at the physical addr", cmd_x},
     {"w", "add a watch point at the expr", cmd_w},
     {"d", "delete the Nth watch point ", cmd_d},
+    {"attach", "begin different test", cmd_attach},
+    {"detach", "stop  different test", cmd_detach}
     /* TODO: Add more commands */
 
 };

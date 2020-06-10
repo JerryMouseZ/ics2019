@@ -2,8 +2,18 @@
 
 make_EHelper(lidt)
 {
-  TODO();
-
+  rtl_lm(&s0, &id_dest->addr, 2);
+  IDTR(limit) = (unsigned short)s0 & 0xffff;
+  rtl_addi(&id_dest->addr, &id_dest->addr, 2);
+  rtl_lm(&s0, &id_dest->addr, 4);
+  if (decinfo.isa.is_operand_size_16)
+  {
+    IDTR(base) = (0xffffff & s0);
+  }
+  else
+  {
+    IDTR(base) = s0;
+  }
   print_asm_template1(lidt);
 }
 
@@ -23,19 +33,23 @@ make_EHelper(mov_cr2r)
   difftest_skip_ref();
 }
 
+void raise_intr(uint32_t NO, vaddr_t ret_addr);
+
 make_EHelper(int)
 {
-  TODO();
-
+  raise_intr(id_dest->val, *pc);
   print_asm("int %s", id_dest->str);
-
   difftest_skip_dut(1, 2);
 }
 
 make_EHelper(iret)
 {
-  TODO();
-
+  // TODO();
+  //中断返回
+  rtl_pop(&s0);
+  rtl_j(s0);
+  rtl_pop(&cpu.cs);
+  rtl_pop(&cpu.eflag);
   print_asm("iret");
 }
 
@@ -51,19 +65,18 @@ make_EHelper(in)
   switch (id_src->width)
   {
   case 1:
-    s0 = pio_read_b(id_src->val);
+    t2 = pio_read_b(id_src->val);
     break;
   case 2:
-    s0 = pio_read_w(id_src->val);
+    t2 = pio_read_w(id_src->val);
     break;
   case 4:
-    s0 = pio_read_l(id_src->val);
+    t2 = pio_read_l(id_src->val);
     break;
   default:
     break;
   }
-
-  operand_write(id_dest, &s0);
+  operand_write(id_dest, &t2);
   print_asm_template2(in);
 
 #ifdef DIFF_TEST

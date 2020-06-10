@@ -82,7 +82,13 @@ typedef struct
     } eflags;
     rtlreg_t eflag;
   };
-  uint32_t cs, ss, ds, es, fs, gs;
+	// add IDTR
+  rtlreg_t cs;
+  struct IDTR_type
+  {
+    unsigned short limit;
+		rtlreg_t base;
+  } IDTR;
 } CPU_state;
 
 static inline int check_reg_index(int index)
@@ -90,6 +96,10 @@ static inline int check_reg_index(int index)
   assert(index >= 0 && index < 8);
   return index;
 }
+
+
+#define CS (cpu.cs)
+#define IDTR(f) (cpu.IDTR.f)
 
 #define reg_l(index) (cpu.gpr[check_reg_index(index)]._32)
 #define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)

@@ -150,6 +150,6 @@ void difftest_attach()
   is_detach = false;
   is_skip_ref = false;
   skip_dut_nr_instr = 0;
-
+  //设置寄存器
   isa_difftest_attach();
 }

@@ -66,3 +66,53 @@ uint32_t isa_reg_str2val(const char *s, bool *success)
 {
   return 0;
 }
+
+int isa_save_cpu_state(FILE *p)
+{
+  // save 8 basic registers
+  for (int i = R_EAX; i <= R_EDI; i++)
+  {
+    fwrite(&cpu.gpr[i]._32, sizeof(rtlreg_t), 1, p);
+  }
+  // save eip
+  fwrite(&cpu.pc, sizeof(vaddr_t), 1, p);
+
+  // save flag registers
+  fwrite(&cpu.eflag, sizeof(rtlreg_t), 1, p);
+
+  // save CS
+  fwrite(&cpu.cs, sizeof(rtlreg_t), 1, p);
+
+  // save IDTR
+  fwrite(&cpu.IDTR.limit, sizeof(unsigned short), 1, p);
+  fwrite(&cpu.IDTR.base, sizeof(rtlreg_t), 1, p);
+  return 0;
+}
+
+int isa_load_cpu_state(FILE *p)
+{
+  int ret;
+  // load 8 basic registers
+  for (int i = 0; i < 8; i++)
+  {
+    ret = fread(&cpu.gpr[i]._32, sizeof(rtlreg_t), 1, p);
+    if (ret == -1)
+      return ret;
+  }
+  // load eip
+  ret = fread(&cpu.pc, sizeof(vaddr_t), 1, p);
+  if (ret == -1)
+    return ret;
+  // load flag registers
+  ret = fread(&cpu.eflag, sizeof(rtlreg_t), 1, p);
+  if (ret == -1)
+    return ret;
+  // load CS
+  ret = fread(&cpu.cs, sizeof(rtlreg_t), 1, p);
+  if (ret == -1)
+    return ret;
+  // load IDTR
+  ret = fread(&cpu.IDTR.limit, sizeof(unsigned short), 1, p);
+  ret = fread(&cpu.IDTR.base, sizeof(rtlreg_t), 1, p);
+  return ret;
+}
