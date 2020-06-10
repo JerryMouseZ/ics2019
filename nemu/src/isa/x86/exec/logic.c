@@ -98,23 +98,48 @@ make_EHelper(shr)
 
 make_EHelper(shrd)
 {
-  unsigned count = id_src2->val % 32;
-  if (count == 0)
-    return;
+  rtl_shr(&t0, &id_dest->val, &id_src->val);
   if (decinfo.isa.is_operand_size_16)
   {
-    cpu.eflags.CF = (id_dest->val & (1 << (count - 1))) ? 1 : 0;
-    t0 = (id_dest->val >> count);
-    t1 = (id_src->val << (16 - count));
+    t1 = 16;
   }
   else
   {
-    cpu.eflags.CF = (id_dest->val & (1 << (count - 1))) ? 1 : 0;
-    t0 = (id_dest->val >> count);
-    t1 = (id_src->val << (32 - count));
-    s0 = t0 & t1;
+    t1 = 32;
   }
-  operand_write(id_dest, &s0);
+  rtl_sub(&t1, &t1, &id_src->val);
+  rtl_shl(&t2, &id_src2->val, &t1);
+
+  rtl_or(&t0, &t0, &t2);
+  operand_write(id_dest, &t0);
+
+  // unnecessary to update CF and OF in NEMU
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+  print_asm_template2(shrd);
+}
+
+make_EHelper(shld)
+{
+  rtl_shl(&t0, &id_dest->val, &id_src->val);
+  if (decinfo.isa.is_operand_size_16)
+  {
+    t1 = 16;
+  }
+  else
+  {
+    t1 = 32;
+  }
+  rtl_sub(&t1, &t1, &id_src->val);
+  rtl_shr(&t2, &id_src2->val, &t1);
+
+  rtl_or(&t0, &t0, &t2);
+  operand_write(id_dest, &t0);
+
+  // unnecessary to update CF and OF in NEMU
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+  print_asm_template2(shld);
 }
 
 make_EHelper(setcc)
