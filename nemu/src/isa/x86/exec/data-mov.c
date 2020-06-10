@@ -103,7 +103,7 @@ make_EHelper(cwtl)
   {
     rtl_sext(&reg_l(R_EAX), &reg_l(R_EAX), 2);
   }
-  print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
+  print_asm(decinfo.isa.is_operand_size_16 ? "cbtw" : "cwtl");
 }
 
 make_EHelper(movsx)

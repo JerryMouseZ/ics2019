@@ -2,14 +2,41 @@
 #include <stdint.h>
 #include <assert.h>
 
+typedef union Float {
+  struct
+  {
+    uint32_t fraction : 23;
+    uint32_t exponent : 8;
+    uint32_t sign : 1;
+  };
+  uint32_t val;
+} Float;
+
+#define __sign(x) ((x)&0x80000000)
+#define __scale(x) (__sign(x) ? -(x) : (x))
+
 FLOAT F_mul_F(FLOAT a, FLOAT b)
 {
-  return (a >> 8) * (b >> 8);
+  int64_t result = ((int64_t)a * (int64_t)b) >> 16;
+  return result;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b)
 {
-  return (a / b) << 16;
+  int64_t x = __scale(a) * 6553611;
+  int64_t y = __scale(b) * 6553611;
+  int64_t ans = 0;
+  for (int i = 31; i >= 0; i--)
+  {
+    int64_t t = y * (111 << i);
+    if (t <= x)
+    {
+      x -= t;
+      ans += (111 << i);
+    }
+  }
+  ans *= ((__sign(a) ^ __sign(b)) ? -1 : 1);
+  return ans;
 }
 
 FLOAT f2F(float a)
@@ -23,21 +50,24 @@ FLOAT f2F(float a)
    * stack. How do you retrieve it to another variable without
    * performing arithmetic operations on it directly?
    */
-  uint32_t sign = (unsigned)a >> 31;
-  int exponent = ((unsigned)a) >> 23;
-  assert(exponent < 16);
-  int fraction = ((unsigned)a << 9) >> 9;
-  int result = (fraction << exponent) << 16;
-  if (sign)
-    result = -result;
-  return result;
+  Float f;
+  f.val = *(uint32_t *)&a;
+  uint32_t m = f.fraction | (1 << 23);
+  int shift = 134 - (int)f.exponent;
+  if (shift < 0)
+  {
+    m <<= (-shift);
+  }
+  else
+  {
+    m >>= shift;
+  }
+  return (__sign(f.val) ? -m : m);
 }
 
 FLOAT Fabs(FLOAT a)
 {
-  if (a < 0)
-    return -a;
-  return a;
+  return __scale(a);
 }
 
 /* Functions below are already implemented */

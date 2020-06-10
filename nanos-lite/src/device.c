@@ -79,22 +79,21 @@ size_t fb_write(const void *buf, size_t offset, size_t len)
   int x1 = index % screen_width_;
   int y1 = index / screen_width_;
   index = (offset + len) / 4;
-  draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
-  return len;
+  // draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
+  // return 1;
   int y2 = index / screen_width_;
-  // printf("%d\n", y1 == y2);
   assert(y2 >= y1);
   if (y1 == y2)
   {
     draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
-    return;
+    return len;
   }
   int tempw = screen_width_ - x1; //第一行的像素
   if (y2 - y1 == 1)
   {
     draw_rect((uint32_t *)buf, x1, y1, tempw, 1);
     draw_rect((uint32_t *)buf + tempw, 0, y2, len / 4 - tempw, 1); //画第二行
-    return;
+    return len;
   }
   draw_rect((uint32_t *)buf, x1, y1, tempw, 1);
   int h = y2 - y1 - 1;

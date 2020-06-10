@@ -2,17 +2,17 @@
 #define __FLOAT_H__
 
 #include "assert.h"
-
+#include <stdio.h>
 typedef int FLOAT;
 
 static inline int F2int(FLOAT a)
 {
-  return a >> 16;
+  return (a >> 16);
 }
 
 static inline FLOAT int2F(int a)
 {
-  return a << 16;
+  return (a << 16);
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b)
