@@ -80,10 +80,9 @@ size_t fb_write(const void *buf, size_t offset, size_t len)
   int x1 = index % screen_width_;
   int y1 = index / screen_width_;
   index = (offset + len) / 4;
-  draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
-  return len;
+  // draw_rect((uint32_t *)buf, x1, y1, len / 4, 1);
+  // return 1;
   int y2 = index / screen_width_;
-  // printf("%d\n", y1 == y2);
   assert(y2 >= y1);
   if (y1 == y2)
   {
