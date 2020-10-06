@@ -72,7 +72,6 @@ void context_uload(PCB *pcb, const char *filename);
 
 int _execve(const char *path, char *const argv[], char *const envp[])
 {
-//由于当前进程已经有地址空间，不再需要创建一个全新的地址空间，直接读入新的进程即可。不过会造成内存泄漏。
   naive_uload(current, path);
   return 0;
 }
